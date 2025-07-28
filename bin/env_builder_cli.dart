@@ -3,7 +3,7 @@ library;
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
-import 'package:env_builder_cli/env.dart' as env_builder_cli;
+import 'package:env_builder_cli/env_builder_cli.dart' as env_builder_cli;
 
 const envPackageName = 'env';
 const packagesFolderName = 'packages';
