@@ -1,14 +1,15 @@
+library;
+
 import 'dart:io';
 
-import 'package:env_builder_cli/env_builder.dart';
 import 'package:path/path.dart' as p;
-import 'package:env_builder_cli/env_builder_cli.dart' as env_builder_cli;
+import 'package:env_builder_cli/env.dart' as env_builder_cli;
 
 const envPackageName = 'env';
 const packagesFolderName = 'packages';
 
 Future<void> main(List<String> args) async {
-  final EnvBuilder envBuilder = env_builder_cli.EnvBuilderCli();
+  final env_builder_cli.EnvBuilder envBuilder = env_builder_cli.EnvBuilderCli();
   if (args.isEmpty ||
       !(args.length == 1 && args[0].startsWith('--env-file='))) {
     envBuilder.printUsage();

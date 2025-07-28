@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
-import 'package:env_builder_cli/env_builder.dart';
+import 'package:env_builder_cli/src/env_builder.dart';
 
 class EnvBuilderCli implements EnvBuilder {
   @override
