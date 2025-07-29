@@ -1,4 +1,4 @@
-import 'package:env/env.dart';
+// import 'package:env/env.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -32,17 +32,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String baseUrl = '';
-  final appFlavor = AppFlavor.production();
+  // final appFlavor = AppFlavor.production();
 
-  @override
-  void initState() {
-    if (mounted) {
-      setState(() {
-        baseUrl = appFlavor.getEnv(Env.baseUrl);
-      });
-    }
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   if (mounted) {
+  //     setState(() {
+  //       baseUrl = appFlavor.getEnv(Env.baseUrl);
+  //     });
+  //   }
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
