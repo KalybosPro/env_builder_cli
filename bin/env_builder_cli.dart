@@ -1,7 +1,6 @@
 library;
 
-import 'dart:io';
-
+import 'package:universal_io/io.dart';
 import 'package:path/path.dart' as p;
 import 'package:env_builder_cli/env_builder_cli.dart' as env_builder_cli;
 
