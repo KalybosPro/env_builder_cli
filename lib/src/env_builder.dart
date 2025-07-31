@@ -11,7 +11,7 @@ abstract class EnvBuilder {
   /// Returns suffix for generated env Dart files, e.g., 'dev' for env.dev.dart
   String envDartFileSuffix(String fileName);
 
-  /// Generates Dart code for individual env.*.dart files following PDF structure.
+  /// Generates Dart code for individual env.*.dart files
   String generateEnvClassContent(
     String envFileName,
     String envClassName,

@@ -78,12 +78,16 @@ env_builder --env-file=.env.development
 
 ```
 
-Wait till `env_builder` take care of everything for you.
+Wait till `env_builder` takes care of everything for you.
 Now, you can use your environment variables inside your application.
 
 Ex:
 
 ```dart
+/// In development mode, use AppFlavor.development(); => stands for .env.development
+/// In production mode, use AppFlavor.production(); => stands for .env.production or .env in case you provide only that one
+/// In staging mode, use AppFlavor.staging(); => stands for .env.staging
+
 final appFlavor = AppFlavor.production();
 
 class ApiService {
@@ -92,3 +96,12 @@ class ApiService {
 }
 
 ```
+- In development mode, use `AppFlavor.development()`. It stands for .env.development
+- In production mode, use `AppFlavor.production()`. It stands for .env.production or .env in case you provide only that one.
+- In staging mode, use `AppFlavor.staging()`. It stands for .env.staging
+
+NB: you can name you .env.* file whatever you want. But, to call the appropriate AppFlavor, use the word after .env.
+
+Ex:
+
+`.env.word` ==> `AppFlavor.word()`
