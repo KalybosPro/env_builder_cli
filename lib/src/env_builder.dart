@@ -1,6 +1,5 @@
 import 'package:universal_io/io.dart';
 
-
 abstract class EnvBuilder {
   /// Returns env class name for the env.* file, e.g. EnvDev, EnvProd, EnvStg
   String generateEnvClassName(String envFileName);

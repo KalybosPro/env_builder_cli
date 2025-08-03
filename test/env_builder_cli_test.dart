@@ -5,18 +5,19 @@ import 'package:env_builder_cli/src/env_builder_cli.dart';
 import 'package:test/test.dart';
 import 'package:path/path.dart' as p;
 
-
 void main() {
   late EnvBuilder builder;
 
   setUp(() {
-    builder =
-        EnvBuilderCli();
+    builder = EnvBuilderCli();
   });
 
   group('EnvBuilder', () {
     test('generateEnvClassName should convert file name to class name', () {
-      expect(builder.generateEnvClassName('.env.development'), equals('EnvDev'));
+      expect(
+        builder.generateEnvClassName('.env.development'),
+        equals('EnvDev'),
+      );
       expect(
         builder.generateEnvClassName('.env.production'),
         equals('EnvProd'),
@@ -32,10 +33,7 @@ void main() {
 
     test('envDartFileSuffix returns suffix correctly', () {
       expect(builder.envDartFileSuffix('.env.development'), equals('dev'));
-      expect(
-        builder.envDartFileSuffix('.env.production'),
-        equals('prod'),
-      );
+      expect(builder.envDartFileSuffix('.env.production'), equals('prod'));
     });
 
     test('toCamelCase converts SCREAMING_SNAKE_CASE to camelCase', () {

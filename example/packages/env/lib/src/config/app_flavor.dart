@@ -9,34 +9,29 @@ sealed class AppEnv {
 }
 
 class AppFlavor extends AppEnv {
-  factory AppFlavor.production() => const AppFlavor._(flavor: Flavor.production);
-
+  factory AppFlavor.production() =>
+      const AppFlavor._(flavor: Flavor.production);
 
   const AppFlavor._({required this.flavor});
 
   final Flavor flavor;
 
   @override
-  String getEnv(Env env) => switch(env){
-    Env.baseUrl => switch(flavor){
-  Flavor.production => EnvProd.baseUrl,
+  String getEnv(Env env) => switch (env) {
+    Env.baseUrl => switch (flavor) {
+      Flavor.production => EnvProd.baseUrl,
+    },
 
-},
+    Env.apiKey => switch (flavor) {
+      Flavor.production => EnvProd.apiKey,
+    },
 
-Env.apiKey => switch(flavor){
-  Flavor.production => EnvProd.apiKey,
+    Env.loginUrl => switch (flavor) {
+      Flavor.production => EnvProd.loginUrl,
+    },
 
-},
-
-Env.loginUrl => switch(flavor){
-  Flavor.production => EnvProd.loginUrl,
-
-},
-
-Env.registerUrl => switch(flavor){
-  Flavor.production => EnvProd.registerUrl,
-
-},
-
+    Env.registerUrl => switch (flavor) {
+      Flavor.production => EnvProd.registerUrl,
+    },
   };
 }
