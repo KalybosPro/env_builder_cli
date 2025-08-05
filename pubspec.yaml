@@ -21,11 +21,3 @@ dev_dependencies:
 executables:
   env_builder: env_builder_cli
 
-flutter:
-  platforms:
-    Android:
-    iOS:
-    Windows:
-    Linux:
-    macOS:
-    Web:
