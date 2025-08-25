@@ -54,5 +54,13 @@ class AppFlavor extends AppEnv {
 
       Flavor.staging => EnvStg.registerUrl,
     },
+
+    Env.createUserUrl => switch (flavor) {
+      Flavor.development => EnvDev.createUserUrl,
+
+      Flavor.production => EnvProd.createUserUrl,
+
+      Flavor.staging => EnvStg.createUserUrl,
+    },
   };
 }

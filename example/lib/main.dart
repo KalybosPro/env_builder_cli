@@ -1,3 +1,6 @@
+
+// ignore_for_file: avoid_print
+
 import 'package:env/env.dart';
 import 'package:flutter/material.dart';
 
@@ -34,6 +37,14 @@ class _MyHomePageState extends State<MyHomePage> {
   String baseUrl = '';
   final appFlavor = AppFlavor.production();
 
+  // Just to simulate the use of EnvValue
+  void createUser(EnvValue env) {
+    final url = env(Env.createUserUrl);
+    final baseUrl = env(Env.baseUrl);
+
+    print('Response: $baseUrl$url');
+  }
+
   @override
   void initState() {
     if (mounted) {
@@ -41,6 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
         baseUrl = appFlavor.getEnv(Env.baseUrl);
       });
     }
+    createUser(appFlavor.getEnv);
     super.initState();
   }
 

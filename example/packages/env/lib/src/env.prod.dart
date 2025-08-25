@@ -20,4 +20,8 @@ static final String loginUrl = _EnvProd.loginUrl;
 @EnviedField(varName: 'REGISTER_URL', obfuscate: true)
 static final String registerUrl = _EnvProd.registerUrl;
 
+/// The value for Create User Url.
+@EnviedField(varName: 'CREATE_USER_URL', obfuscate: true)
+static final String createUserUrl = _EnvProd.createUserUrl;
+
 }
