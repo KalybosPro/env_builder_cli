@@ -112,13 +112,13 @@ typedef EnvValue = String Function(Env env);
               .map((e) {
                 final className = NamingUtils.getEnvironmentClassName(e);
                 return '''
-Flavor.$e => $className.$keyName,
+  Flavor.$e => $className.$keyName,
 ''';
               })
               .join('\n');
 
           return '''
-Env.$keyName => switch(flavor){
+  Env.$keyName => switch(flavor){
   $fields
 },
 ''';

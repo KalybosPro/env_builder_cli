@@ -6,19 +6,21 @@ class EnvConfig {
   static const String defaultSdkVersion = '^3.8.1';
   static const String defaultFlutterVersion = '>=1.17.0';
 
-  // Environment mappings
+  /// Environment mappings
   static const Map<String, String> environmentMappings = {
     'development': 'dev',
     'production': 'prod',
     'staging': 'stg',
   };
 
+  /// Class name mappings
   static const Map<String, String> classNameMappings = {
     'development': 'EnvDev',
     'production': 'EnvProd',
     'staging': 'EnvStg',
   };
 
+  /// file name mappings
   static const Map<String, String> fileNameMappings = {
     'development': 'env.dev.dart',
     'production': 'env.prod.dart',
