@@ -6,3 +6,7 @@
 
 - README modified.
 - LICENSE changed.
+
+## 1.0.0+2
+
+- Encrypt and decrypt env files

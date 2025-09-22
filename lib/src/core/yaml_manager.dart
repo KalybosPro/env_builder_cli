@@ -44,13 +44,18 @@ class YamlManager {
 name: env
 description: ${EnvConfig.defaultDescription}
 version: 0.0.1
+publish_to: none
+
 environment:
   sdk: ${EnvConfig.defaultSdkVersion}
   flutter: "${EnvConfig.defaultFlutterVersion}"
 
 dependencies:
+  envied: ^1.2.1
 
 dev_dependencies:
+  envied_generator: ^1.2.1
+  build_runner: ^2.8.0
 
 ''';
     pubspecFile.writeAsStringSync(content);
@@ -74,19 +79,19 @@ dev_dependencies:
   }
 
   static Future<void> _addDependencies(String path) async {
-    await ProcessRunner.runDartCommand(['pub', 'add', 'envied'], path);
-    await ProcessRunner.runDartCommand([
-      'pub',
-      'add',
-      'envied_generator',
-      '--dev',
-    ], path);
-    await ProcessRunner.runDartCommand([
-      'pub',
-      'add',
-      'build_runner',
-      '--dev',
-    ], path);
+    // await ProcessRunner.runDartCommand(['pub', 'add', 'envied'], path);
+    // await ProcessRunner.runDartCommand([
+    //   'pub',
+    //   'add',
+    //   'envied_generator',
+    //   '--dev',
+    // ], path);
+    // await ProcessRunner.runDartCommand([
+    //   'pub',
+    //   'add',
+    //   'build_runner',
+    //   '--dev',
+    // ], path);
     await ProcessRunner.runDartCommand(['run', 'build_runner', 'build'], path);
   }
 

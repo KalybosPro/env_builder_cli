@@ -6,3 +6,4 @@ export 'env_builder_cli_app.dart';
 export 'file_copier.dart';
 export 'file_validator.dart';
 export 'package_configurator.dart';
+export 'env_file_crypto.dart';

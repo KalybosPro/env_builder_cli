@@ -111,3 +111,73 @@ NB: you can name you .env.* file whatever you want. But, to call the appropriate
 Ex:
 
 `.env.word` ==> `AppFlavor.word()`
+
+## Environment File Encryption / Decryption
+
+This CLI provides a simple and secure way to encrypt and decrypt your environment files (.env).
+It helps protect sensitive information such as API keys, database credentials, and tokens when sharing code or committing to a repository.
+
+## Features
+
+- AES-based encryption with a password-derived key.
+- CLI commands for quick usage (encrypt / decrypt).
+- Compatible with .env files of any size.
+
+## Usage
+
+1. Encrypt a file
+
+```bash
+
+env_builder encrypt .env .env.enc --password superSecretKey
+```
+
+- `.env` → input file (plaintext environment file).
+- `.env.enc` → output file (encrypted file).
+- `--password` → secret used to derive the encryption key.
+
+Result:
+
+- A `.env.enc` file is created.
+- Can be stored safely in your repo.
+
+2. Decrypt a file
+
+```bash
+
+env_builder decrypt .env.enc .env --password superSecretKey
+```
+
+- `.env.enc` → input file (encrypted file).
+- `.env` → output file (restored plaintext file).
+- `--password` → must be the same password used during encryption.
+
+Result:
+
+- The original `.env` file is restored.
+
+## Notes
+
+- If the password does not match or the file is corrupted, you’ll get:
+```javascript
+
+Error: Invalid password or corrupted file.
+```
+- For production use, always use a strong and private password.
+- Do not commit decrypted `.env` files to version control. Only commit the encrypted version (`.env.enc`).
+
+## Example Workflow
+
+```bash
+
+# Encrypt your .env before committing
+env_builder encrypt .env .env.enc --password superSecretKey12345
+
+# Remove the plaintext file (optional)
+rm .env
+
+# Later, restore it locally
+env_builder decrypt .env.enc .env --password superSecretKey12345
+```
+
+With this, your team can safely share the .env.enc file while keeping secrets protected.

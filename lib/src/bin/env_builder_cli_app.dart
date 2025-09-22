@@ -9,10 +9,12 @@ class EnvBuilderCliApp {
   final ArgumentParser argumentParser;
   late final DartFileGenerator dartFileGenerator;
   late final PackageConfigurator packageConfigurator;
+  late final EnvFileCrypto _envFileCrypto;
 
   EnvBuilderCliApp(List<String> args)
-      : envBuilder = env_builder_cli.EnvBuilderCli(),
-        argumentParser = ArgumentParser(args) {
+    : envBuilder = env_builder_cli.EnvBuilderCli(),
+      argumentParser = ArgumentParser(args) {
+    _envFileCrypto = EnvFileCrypto(argumentParser);
     dartFileGenerator = DartFileGenerator(envBuilder);
     packageConfigurator = PackageConfigurator(envBuilder);
   }
@@ -20,51 +22,60 @@ class EnvBuilderCliApp {
   /// Main entry point for the CLI application
   Future<void> run() async {
     try {
-      // Validate arguments
-      if (!argumentParser.isValidArguments()) {
-        envBuilder.printUsage();
-        exit(1);
+      // To encrypt or decrypt .env file
+      if (argumentParser.isCrypto()) {
+        await _envFileCrypto.run();
+        exit(0);
+      } else {
+        // Validate arguments
+        if (!argumentParser.isValidArguments()) {
+          envBuilder.printUsage();
+          exit(1);
+        }
+
+        final envFilePaths = argumentParser.extractEnvFilePaths();
+
+        // Validate environment files exist
+        FileValidator.validateEnvFiles(envFilePaths);
+
+        // Setup directories
+        final currentDir = Directory.current.path;
+        final packagesDir = DirectoryManager.getPackagesDirectory(currentDir);
+        final envPackageDir = await DirectoryManager.getEnvPackageDirectory(
+          packagesDir,
+          envBuilder,
+        );
+
+        // Copy environment files
+        await FileCopier.copyEnvFiles(envFilePaths, envPackageDir);
+
+        // Create source directory
+        final srcDirPath = p.join(
+          envPackageDir.path,
+          CliConfig.libFolderName,
+          CliConfig.srcFolderName,
+        );
+        DirectoryManager.ensureDirectoryExists(srcDirPath);
+        final srcDir = Directory(srcDirPath);
+
+        // Generate Dart files
+        await dartFileGenerator.generateEnvDartFiles(envFilePaths, srcDir);
+        dartFileGenerator.generateEnumsFile(envFilePaths.first, srcDir);
+        dartFileGenerator.generateLibraryExportFile(
+          envFilePaths,
+          envPackageDir,
+        );
+        dartFileGenerator.generateAppFlavorFile(envFilePaths, srcDir);
+
+        // Configure package
+        await packageConfigurator.configureEnvPackage(envPackageDir);
+        packageConfigurator.updateRootPubspec(currentDir);
+        await packageConfigurator.runPubGet();
+
+        // Success message
+        _printSuccessMessage();
+        exit(0);
       }
-
-      final envFilePaths = argumentParser.extractEnvFilePaths();
-      
-      // Validate environment files exist
-      FileValidator.validateEnvFiles(envFilePaths);
-
-      // Setup directories
-      final currentDir = Directory.current.path;
-      final packagesDir = DirectoryManager.getPackagesDirectory(currentDir);
-      final envPackageDir = await DirectoryManager.getEnvPackageDirectory(
-        packagesDir, 
-        envBuilder,
-      );
-
-      // Copy environment files
-      await FileCopier.copyEnvFiles(envFilePaths, envPackageDir);
-
-      // Create source directory
-      final srcDirPath = p.join(
-        envPackageDir.path, 
-        CliConfig.libFolderName, 
-        CliConfig.srcFolderName,
-      );
-      DirectoryManager.ensureDirectoryExists(srcDirPath);
-      final srcDir = Directory(srcDirPath);
-
-      // Generate Dart files
-      await dartFileGenerator.generateEnvDartFiles(envFilePaths, srcDir);
-      dartFileGenerator.generateEnumsFile(envFilePaths.first, srcDir);
-      dartFileGenerator.generateLibraryExportFile(envFilePaths, envPackageDir);
-      dartFileGenerator.generateAppFlavorFile(envFilePaths, srcDir);
-
-      // Configure package
-      await packageConfigurator.configureEnvPackage(envPackageDir);
-      packageConfigurator.updateRootPubspec(currentDir);
-      await packageConfigurator.runPubGet();
-
-      // Success message
-      _printSuccessMessage();
-
     } catch (e) {
       _handleError(e);
     }

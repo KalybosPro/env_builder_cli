@@ -1,6 +1,5 @@
-import 'dart:io';
 
-import 'package:env_builder_cli/src/env_builder.dart';
+import 'package:env_builder_cli/src/core/core.dart';
 import 'package:env_builder_cli/src/env_builder_cli.dart';
 import 'package:test/test.dart';
 import 'package:path/path.dart' as p;
