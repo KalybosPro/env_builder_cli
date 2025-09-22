@@ -7,6 +7,8 @@
 - README modified.
 - LICENSE changed.
 
-## 1.0.0+2
+## 1.1.0
 
-- Encrypt and decrypt env files
+- Added environment file encryption/decryption with AES
+- Improved error handling for invalid/corrupted files
+- Updated README with usage examples

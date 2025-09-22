@@ -1,6 +1,6 @@
 name: env_builder_cli
 description: A Flutter CLI tool to automate the creation and maintenance of the env Flutter package from multiple .env files.
-version: 1.0.0+2
+version: 1.1.0
 repository: https://github.com/KalybosPro/env_builder_cli
 homepage: https://github.com/KalybosPro/env_builder_cli
 
