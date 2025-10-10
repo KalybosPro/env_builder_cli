@@ -35,31 +35,11 @@ class YamlManager {
       print('Failed to update pubspec.yaml: $e');
     }
 
-    await _addDependencies(path);
+    await _addDependencies(pubspecFile, path);
   }
 
   static Future<void> _createNewPubspec(File pubspecFile, String path) async {
-    final content =
-        '''
-name: env
-description: ${EnvConfig.defaultDescription}
-version: 0.0.1
-publish_to: none
-
-environment:
-  sdk: ${EnvConfig.defaultSdkVersion}
-  flutter: "${EnvConfig.defaultFlutterVersion}"
-
-dependencies:
-  envied: ^1.2.1
-
-dev_dependencies:
-  envied_generator: ^1.2.1
-  build_runner: ^2.8.0
-
-''';
-    pubspecFile.writeAsStringSync(content);
-    await _addDependencies(path);
+    await _addDependencies(pubspecFile, path);
     print(
       'Created pubspec.yaml with envied dependencies and flutter plugin platforms.',
     );
@@ -78,7 +58,7 @@ dev_dependencies:
     }
   }
 
-  static Future<void> _addDependencies(String path) async {
+  static Future<void> _addDependencies(File pubspecFile, String path) async {
     // await ProcessRunner.runDartCommand(['pub', 'add', 'envied'], path);
     // await ProcessRunner.runDartCommand([
     //   'pub',
@@ -92,6 +72,28 @@ dev_dependencies:
     //   'build_runner',
     //   '--dev',
     // ], path);
+
+    final content =
+        '''
+name: env
+description: ${EnvConfig.defaultDescription}
+version: ${EnvConfig.defaultVersion}
+publish_to: none
+
+environment:
+  sdk: ${EnvConfig.defaultSdkVersion}
+  flutter: "${EnvConfig.defaultFlutterVersion}"
+
+dependencies:
+  envied: ^1.2.1
+
+dev_dependencies:
+  envied_generator: ^1.2.1
+  build_runner: ^2.8.0
+
+''';
+    pubspecFile.writeAsStringSync(content);
+
     await ProcessRunner.runDartCommand(['run', 'build_runner', 'build'], path);
   }
 

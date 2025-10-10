@@ -71,7 +71,7 @@ class EnvBuilderCliApp {
         await packageConfigurator.configureEnvPackage(envPackageDir);
         packageConfigurator.updateRootPubspec(currentDir);
         await packageConfigurator.runPubGet();
-
+        await _wantToEncryptEnvFile();
         // Success message
         _printSuccessMessage();
         exit(0);
@@ -99,5 +99,36 @@ class EnvBuilderCliApp {
     print('\nDone! Your env package is ready to use.');
     print("Import it in your app like:");
     print("import 'package:env/env.dart';\n");
+  }
+
+  Future<void> _wantToEncryptEnvFile() async {
+    print(
+      'Do you want to encrypt your .env files in your env package? (y/n): ',
+    );
+    try {
+      final response = stdin.readLineSync();
+      final re = response != null && response.toLowerCase() == 'y';
+
+      if (re) {
+        final password = EnvCrypto.askPassword('Enter the secret key: ');
+        print('Encrypting .env files...');
+        for (final file in FileCopier.envFiles) {
+          final output = '$file.encrypted';
+          await EnvCrypto.encryptFile(file, output, password);
+        }
+        for (var path in FileCopier.envFiles) {
+          File(path).deleteSync();
+        }
+      } else {
+        print('Skipping encryption of .env files.');
+        print(
+          'Remember to avoid committing plain .env files to version control!',
+        );
+        return;
+      }
+    } catch (e) {
+      print('Error reading input: $e');
+      return;
+    }
   }
 }
