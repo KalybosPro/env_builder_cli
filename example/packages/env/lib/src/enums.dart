@@ -13,10 +13,7 @@ enum Env {
   loginUrl('LOGIN_URL'),
 
   /// The value for Register Url.
-  registerUrl('REGISTER_URL'),
-
-  /// The value for Create User Url.
-  createUserUrl('CREATE_USER_URL');
+  registerUrl('REGISTER_URL');
 
   /// {@macro env}
   const Env(this.name);

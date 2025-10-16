@@ -1,12 +1,21 @@
+// ignore_for_file: avoid_print
+
 import '../core/core.dart';
-import 'bin.dart';
+import 'cli_config.dart';
+import 'directory_manager.dart';
 import 'package:path/path.dart' as p;
 import 'package:env_builder_cli/env_builder_cli.dart' as env_builder_cli;
 
 /// Handles Dart file generation
+///
+/// Generates all Dart source files for the environment package, including:
+/// - Environment-specific classes with obfuscated field access
+/// - Enum definitions for environment variable keys
+/// - Library export files for clean imports
+/// - Application flavor classes for runtime configuration switching
 class DartFileGenerator {
   final env_builder_cli.EnvBuilder envBuilder;
-  
+
   DartFileGenerator(this.envBuilder);
 
   /// Generates all Dart environment files
@@ -41,7 +50,7 @@ class DartFileGenerator {
       print('Generated $envDartFilePath');
     } catch (e) {
       throw FileSystemException(
-        'Error writing Dart env file $envDartFilePath: $e'
+        'Error writing Dart env file $envDartFilePath: $e',
       );
     }
   }
@@ -67,7 +76,9 @@ class DartFileGenerator {
     List<String> envFilePaths,
     Directory envPackageDir,
   ) {
-    final libDir = Directory(p.join(envPackageDir.path, CliConfig.libFolderName));
+    final libDir = Directory(
+      p.join(envPackageDir.path, CliConfig.libFolderName),
+    );
     final envExportFilePath = p.join(libDir.path, 'env.dart');
     final envExportFile = File(envExportFilePath);
 
@@ -100,15 +111,12 @@ $envExports
   }
 
   /// Generates the app flavor configuration file
-  void generateAppFlavorFile(
-    List<String> envFilePaths,
-    Directory srcDir,
-  ) {
+  void generateAppFlavorFile(List<String> envFilePaths, Directory srcDir) {
     final configDirPath = p.join(srcDir.path, CliConfig.configFolderName);
     final configDir = Directory(configDirPath);
     final appFlavorFilePath = p.join(configDir.path, 'app_flavor.dart');
     final appFlavorFile = File(appFlavorFilePath);
-    
+
     final appFlavorContent = envBuilder.generateAppFlavorContent(envFilePaths);
 
     try {

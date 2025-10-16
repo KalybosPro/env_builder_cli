@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -5,10 +7,16 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:crypto/crypto.dart';
 import 'package:universal_io/io.dart';
 
+/// Handles encryption and decryption of environment files
+///
+/// Provides secure encryption/decryption using AES-256 algorithm
+/// with SHA-256 derived keys from user passwords.
+/// Supports both interactive password input and command-line options.
 class EnvCrypto {
-  /// Generate AES-256 key from a password
-  static encrypt.Key _deriveKey(String password) {
-    final keyHash = sha256.convert(utf8.encode(password)).bytes;
+  /// Generate AES-256 key from a password with salt
+  static encrypt.Key _deriveKey(String password, {String salt = 'envied_salt'}) {
+    final combined = password + salt; // Add salt for better security
+    final keyHash = sha256.convert(utf8.encode(combined)).bytes;
     return encrypt.Key(Uint8List.fromList(keyHash));
   }
 

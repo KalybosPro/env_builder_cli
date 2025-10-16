@@ -1,9 +1,19 @@
 
+// ignore_for_file: avoid_print
+
 import 'package:env_builder_cli/src/core/core.dart';
 import 'package:env_builder_cli/src/env_builder_cli.dart';
 import 'package:test/test.dart';
 import 'package:path/path.dart' as p;
 
+/// Test suite for the EnvBuilderCli and its core functionality
+///
+/// Tests the main features of the env_builder_cli package including:
+/// - Environment class name generation
+/// - Dart file naming conventions
+/// - Environment suffix extraction
+/// - String manipulation utilities
+/// - File parsing capabilities
 void main() {
   late EnvBuilder builder;
 

@@ -5,6 +5,7 @@ export 'file_system_manager.dart';
 export 'naming_utils.dart';
 export 'process_runner.dart';
 export 'yaml_manager.dart';
+export 'text_templates.dart';
 export 'package:universal_io/io.dart';
 export 'package:yaml/yaml.dart';
 export 'package:yaml_edit/yaml_edit.dart';

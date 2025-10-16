@@ -1,15 +1,15 @@
-import 'bin.dart';
-import 'package:args/args.dart';
+// ignore_for_file: avoid_print
+
+import 'cli_config.dart';
 
 /// Handles command line argument parsing and validation
+///
+/// Parses command line arguments for the CLI tool, supporting environment
+/// file processing. Validates input and extracts necessary parameters.
 class ArgumentParser {
   final List<String> args;
 
   ArgumentParser(this.args);
-
-  bool isCrypto() =>
-      args.isNotEmpty && (args.toString().contains('encrypt') ||
-      args.toString().contains('decrypt'));
 
   /// Validates command line arguments
   bool isValidArguments() {
@@ -37,20 +37,5 @@ class ArgumentParser {
     }
 
     return envFilePaths;
-  }
-
-  ArgResults cryptoCommand() {
-    final encryptCmd = ArgParser()
-      ..addOption('password', abbr: 'p', help: 'Secret key');
-    final decryptCmd = ArgParser()
-      ..addOption('password', abbr: 'p', help: 'Secret key');
-
-    final parser = ArgParser()
-      ..addCommand('encrypt', encryptCmd)
-      ..addCommand('decrypt', decryptCmd);
-
-    final results = parser.parse(args);
-
-    return results;
   }
 }

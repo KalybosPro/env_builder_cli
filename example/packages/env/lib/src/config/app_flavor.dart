@@ -1,6 +1,6 @@
 import 'package:env/env.dart';
 
-enum Flavor { development, production, staging }
+enum Flavor { production }
 
 sealed class AppEnv {
   const AppEnv();
@@ -9,58 +9,34 @@ sealed class AppEnv {
 }
 
 class AppFlavor extends AppEnv {
-  factory AppFlavor.development() =>
-      const AppFlavor._(flavor: Flavor.development);
+  factory AppFlavor.production() => const AppFlavor._(flavor: Flavor.production);
 
-  factory AppFlavor.production() =>
-      const AppFlavor._(flavor: Flavor.production);
-
-  factory AppFlavor.staging() => const AppFlavor._(flavor: Flavor.staging);
 
   const AppFlavor._({required this.flavor});
 
   final Flavor flavor;
 
   @override
-  String getEnv(Env env) => switch (env) {
-    Env.baseUrl => switch (flavor) {
-      Flavor.development => EnvDev.baseUrl,
+  String getEnv(Env env) => switch(env){
+      Env.baseUrl => switch(flavor){
+    Flavor.production => EnvProd.baseUrl,
 
-      Flavor.production => EnvProd.baseUrl,
+},
 
-      Flavor.staging => EnvStg.baseUrl,
-    },
+  Env.apiKey => switch(flavor){
+    Flavor.production => EnvProd.apiKey,
 
-    Env.apiKey => switch (flavor) {
-      Flavor.development => EnvDev.apiKey,
+},
 
-      Flavor.production => EnvProd.apiKey,
+  Env.loginUrl => switch(flavor){
+    Flavor.production => EnvProd.loginUrl,
 
-      Flavor.staging => EnvStg.apiKey,
-    },
+},
 
-    Env.loginUrl => switch (flavor) {
-      Flavor.development => EnvDev.loginUrl,
+  Env.registerUrl => switch(flavor){
+    Flavor.production => EnvProd.registerUrl,
 
-      Flavor.production => EnvProd.loginUrl,
+},
 
-      Flavor.staging => EnvStg.loginUrl,
-    },
-
-    Env.registerUrl => switch (flavor) {
-      Flavor.development => EnvDev.registerUrl,
-
-      Flavor.production => EnvProd.registerUrl,
-
-      Flavor.staging => EnvStg.registerUrl,
-    },
-
-    Env.createUserUrl => switch (flavor) {
-      Flavor.development => EnvDev.createUserUrl,
-
-      Flavor.production => EnvProd.createUserUrl,
-
-      Flavor.staging => EnvStg.createUserUrl,
-    },
   };
 }

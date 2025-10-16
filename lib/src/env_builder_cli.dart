@@ -1,6 +1,20 @@
+// ignore_for_file: avoid_print
+
 import 'core/core.dart';
 
 /// Main implementation of the EnvBuilder interface
+///
+/// {@template env_builder_cli}
+/// [EnvBuilderCli] provides a concrete implementation of [EnvBuilder] for
+/// automating environment variable management in Flutter projects.
+///
+/// This class integrates various components to:
+/// - Parse environment files (.env.*)
+/// - Generate Dart classes for type-safe access
+/// - Create Flutter packages with encrypted environment variables
+/// - Handle encryption/decryption of sensitive data
+/// - Update project configurations with dependencies
+/// {@endtemplate}
 class EnvBuilderCli implements EnvBuilder {
   @override
   String envDartFileSuffix(String fileName) =>

@@ -1,6 +1,11 @@
+// ignore_for_file: avoid_print
+
 import 'core.dart';
 
 /// Handles YAML file operations
+///
+/// Manages pubspec.yaml files for both the env package and root Flutter project,
+/// ensuring proper dependency management and configuration updates.
 class YamlManager {
   /// Updates pubspec.yaml with required dependencies
   static Future<void> updatePubspecYaml(File pubspecFile, String path) async {
@@ -30,9 +35,9 @@ class YamlManager {
       _updateYamlField(editor, doc, 'version', EnvConfig.defaultVersion);
 
       pubspecFile.writeAsStringSync(editor.toString());
-      print('pubspec.yaml updated with new description.');
+    print(TextTemplates.pubspecUpdated);
     } catch (e) {
-      print('Failed to update pubspec.yaml: $e');
+      print(TextTemplates.pubspecUpdateFailed.replaceAll('{error}', e.toString()));
     }
 
     await _addDependencies(pubspecFile, path);
@@ -40,9 +45,7 @@ class YamlManager {
 
   static Future<void> _createNewPubspec(File pubspecFile, String path) async {
     await _addDependencies(pubspecFile, path);
-    print(
-      'Created pubspec.yaml with envied dependencies and flutter plugin platforms.',
-    );
+    print(TextTemplates.pubspecCreated);
   }
 
   static void _updateYamlField(
@@ -101,7 +104,7 @@ dev_dependencies:
   static void updateRootPubspecWithEnvPackage(String rootPubspecPath) {
     final file = File(rootPubspecPath);
     if (!file.existsSync()) {
-      print('Error: root pubspec.yaml not found at $rootPubspecPath!');
+      print(TextTemplates.pubspecRootNotFound.replaceAll('{path}', rootPubspecPath));
       exit(1);
     }
 
@@ -119,18 +122,16 @@ dev_dependencies:
         },
       );
       file.writeAsStringSync(editor.toString());
-      print(
-        'Added env package as a path dependency to root pubspec.yaml (dependencies section added).',
-      );
+      print(TextTemplates.pubspecDependencyAdded);
       return;
     }
 
     if (!dependencies.containsKey('env')) {
       editor.update(['dependencies', 'env'], {'path': 'packages/env'});
       file.writeAsStringSync(editor.toString());
-      print('Added env package as a path dependency to root pubspec.yaml.');
+      print(TextTemplates.pubspecDependencyUpdated);
     } else {
-      print('env package dependency already exists in root pubspec.yaml.');
+      print(TextTemplates.pubspecDependencyExists);
     }
   }
 }

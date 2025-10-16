@@ -1,7 +1,15 @@
+// ignore_for_file: avoid_print
+
 import 'core.dart';
 import 'package:path/path.dart' as p;
 
 /// Handles code generation for different file types
+///
+/// Generates Dart code from environment files, including:
+/// - Type-safe access classes using the envied package
+/// - Enum definitions for environment variable keys
+/// - Application flavor classes for runtime configuration
+/// - Test files with basic setup
 class CodeGenerator {
   /// Generates the part statement for generated files
   static String _generatePartStatement(String suffix) {
@@ -36,18 +44,16 @@ class CodeGenerator {
     );
     final partOf = _generatePartStatement(suffix);
 
-    final fields = envFileContent.keys
-        .map((k) {
-          final keyName = NamingUtils.toCamelCase(k);
-          final comment = NamingUtils.generateCommentFromKey(k);
-
-          return '''
-/// $comment
-@EnviedField(varName: '$k', obfuscate: true)
-static final String $keyName = $privateClassName.$keyName;
-''';
-        })
-        .join('\n');
+    final StringBuffer buffer = StringBuffer();
+    for (final key in envFileContent.keys) {
+      final keyName = NamingUtils.toCamelCase(key);
+      final comment = NamingUtils.generateCommentFromKey(key);
+      buffer
+        ..writeln('/// $comment')
+        ..writeln('@EnviedField(varName: \'$key\', obfuscate: true)')
+        ..writeln('static final String $keyName = $privateClassName.$keyName;');
+    }
+    final fields = buffer.toString();
 
     return '''
 import 'package:envied/envied.dart';

@@ -1,5 +1,12 @@
+// ignore_for_file: avoid_print
+
 import 'package:universal_io/io.dart';
 
+/// Abstract interface for environment builder functionality
+///
+/// Defines the contract for building and managing environment variables
+/// in Flutter applications, enabling type-safe access through generated
+/// Dart classes and encrypted storage of sensitive configuration.
 abstract class EnvBuilder {
   /// Returns env class name for the env.* file, e.g. EnvDev, EnvProd, EnvStg
   String generateEnvClassName(String envFileName);

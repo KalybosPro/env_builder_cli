@@ -1,7 +1,14 @@
+// ignore_for_file: avoid_print
+
 import 'core.dart';
 import 'package:path/path.dart' as p;
 
 /// Handles file system operations
+///
+/// Manages file system interactions including:
+/// - Creating and updating .gitignore files with environment rules
+/// - Writing test files for environment packages
+/// - Handling temporary file operations and validation
 class FileSystemManager {
   /// Creates or updates .gitignore file with environment rules
   static Future<void> createGitignoreWithEnvEntries({
