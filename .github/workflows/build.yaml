@@ -1,0 +1,20 @@
+name: Build and Test
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.8.x'
+
+      - name: Install env_builder_cli
+        run: dart pub global activate env_builder_cli
+
+      - name: Generate environment package
+        run: env_builder build --env-file=.env.ci
+
+      - name: Run tests
+        run: flutter test

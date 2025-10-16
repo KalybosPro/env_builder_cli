@@ -6,11 +6,13 @@ class TextTemplates {
   // Usage messages
   static const String usage = '''
 Usage:
-  env_builder --env-file=<file1>,<file2>,...
+  env_builder build                     # Uses all .env* files in current directory
+  env_builder build --env-file=<file1>,<file2>,...  # Specify specific files
 
 Examples:
-  env_builder --env-file=.env
-  env_builder --env-file=.env,.env.dev,.env.prod
+  env_builder build                     # Auto-detects .env.ci, .env.custom, .env.app, etc.
+  env_builder build --env-file=.env.staging
+  env_builder build --env-file=.env.dev,.env.prod
 
 Crypto operations:
   env_builder encrypt --password=<secret> --env-file=<file>
@@ -79,4 +81,9 @@ Crypto operations:
 
   // User prompts
   static const String wantToEncryptPrompt = 'Do you want to encrypt your .env files in your env package? (y/n): ';
+
+  // CLI version
+  static const String cliVersion = '1.1.2';
+  // Dart SDK version from prerequisites
+  static const String dartSdkVersion = '3.8.1+';
 }

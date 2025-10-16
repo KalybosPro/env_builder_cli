@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:env_builder_cli/env_builder_cli.dart';
+import 'package:env_builder_cli/src/bin/commands/commands.dart';
 
 
 /// Application entry point
@@ -13,7 +14,8 @@ Future<void> main(List<String> args) async {
   final commandRunner = CommandRunner<int>('env_builder', 'Automate Flutter env package creation')
     ..addCommand(BuildCommand())
     ..addCommand(EncryptCommand())
-    ..addCommand(DecryptCommand());
+    ..addCommand(DecryptCommand())
+    ..addCommand(VersionCommand());
 
   try {
     final exitCode = await commandRunner.run(args);

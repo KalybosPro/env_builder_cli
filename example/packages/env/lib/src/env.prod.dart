@@ -2,7 +2,7 @@ import 'package:envied/envied.dart';
 
 part 'env.prod.g.dart';
 
-@Envied(path: '.env', obfuscate: true)
+@Envied(path: '.env.ci', obfuscate: true)
 abstract class EnvProd {
   /// The value for Base Url.
 @EnviedField(varName: 'BASE_URL', obfuscate: true)

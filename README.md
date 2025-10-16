@@ -1,181 +1,234 @@
-# Env Builder CLI
+# env_builder_cli
 
-[![Pub Version](https://img.shields.io/pub/v/env_builder_cli.svg)](https://pub.dev/packages/env_builder_cli)
-[![License: Apache](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![pub package](https://img.shields.io/pub/v/env_builder_cli.svg)](https://pub.dev/packages/env_builder_cli)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Dart SDK Version](https://img.shields.io/badge/Dart-3.8.1+-blue.svg)](https://dart.dev/)
 
-
-`env_builder_cli` is a Dart CLI tool designed to automate the creation and maintenance of a Flutter package named `env` inside a `packages/` folder. It helps Flutter developers manage multiple `.env` environment files by generating Dart code with [Envied](https://pub.dev/packages/envied) annotations, updating package dependencies, and managing Flutter project integration seamlessly.
-
----
+A powerful Dart CLI tool that automates the creation and maintenance of environment packages for Flutter applications. Generate type-safe environment variable access from `.env` files with built-in encryption support.
 
 ## Features
 
-- Accept multiple `.env` files (e.g. `.env.development`, `.env.production`, `.env.staging`, etc.).
-- Create the `packages/` directory if it does not exist.
-- Create or update a Flutter package `env` within `packages/env`.
-- Copy all specified `.env.*` files into `packages/env/`.
-- Generate Dart files (`env.dev.dart`, `env.prod.dart`, `env.stg.dart`, etc.) within `lib/src/`.
-- Generate `lib/src/env.dart` exporting all generated environment Dart files.
-- Create or update `pubspec.yaml` inside `packages/env` with required dependencies.
-- Automatically modify the root Flutter project’s `pubspec.yaml` to include `env` as a path dependency.
-- Run `flutter pub get` automatically in the root project after setup.
-- Minimal and clear command-line output.
+- 🚀 **Automated Environment Package Generation**: Automatically creates Flutter packages from `.env` files
+- 🔐 **Built-in Encryption**: AES encryption support for sensitive environment variables
+- 📝 **Type-Safe Access**: Generates Dart classes using [Envied](https://pub.dev/packages/envied) for compile-time safety
+- 🏗️ **Flutter Integration**: Seamlessly integrates with Flutter projects and handles pubspec dependencies
+- 🔄 **Multi-Environment Support**: Handle development, staging, production, and custom environments
+- 📂 **Git Integration**: Automatic `.gitignore` updates with appropriate environment file rules
+- 🧪 **Testing Support**: Generates test files for environment variable validation
 
----
+## Installation
 
-## Prerequisites
+### Global Installation
 
-- Dart SDK version **3.8.1**
-- Flutter SDK installed and added to your system path (for running `flutter` commands).
-- Your Flutter project root directory (with an existing `pubspec.yaml`) contains the `.env.*` files you want to use.
+Install the CLI globally using pub:
 
----
-
-## Installing
-
-```shell
+```bash
 dart pub global activate env_builder_cli
+```
 
+Or using the executable name:
+
+```bash
+dart pub global activate env_builder
+```
+
+### Local Installation
+
+Add to your `pubspec.yaml`:
+
+```yaml
+dev_dependencies:
+  env_builder_cli: ^1.1.2
 ```
 
 ## Usage
 
-Create your `.env.*` files (e.g: `.env`, `.env.development`, `.env.production`, `.env.staging`, etc) inside your Flutter project's root and specify all your necessaries keys and values inside them.
+### Basic Usage
 
-Ex:
+Navigate to your Flutter project root and run:
 
-```env
+```bash
+# Build with all .env* files found in current directory (.env.ci, .env.custom, .env.app, etc.)
+env_builder build
 
-# App settings
-BASE_URL = https://api.example.com/
-API_KEY = supersecret
+# Build with specific environment files
+env_builder build --env-file=.env.development,.env.production,.env.staging
+```
 
-# Routes
-LOGIN_URL = "login"
-REGISTER_URL = "register/user"
+This will:
+1. Create a `packages/env` directory
+2. Copy your `.env` files to the env package
+3. Generate Dart classes for type-safe access
+4. Update dependencies in `pubspec.yaml` files
+5. Run `flutter pub get` automatically
+
+### Commands
+
+#### Build Command
+
+Generates environment packages from `.env` files:
+
+```bash
+# Build with default configuration (auto-detects .env* files)
+env_builder build
+
+# Build with specific environment files
+env_builder build --env-file=.env.dev,.env.prod
+
+# Build with custom output directory
+env_builder build --output-dir=custom_env
 
 ```
 
-## Command
+**Planned Features:**
+- `--output-dir`: Custom output directory (default: `packages/env`)
+- `--no-encrypt`: Skip encryption of sensitive variables
+- `--verbose`: Detailed output during build process
+- **Complex Data Types Support**: Handle JSON-like strings (e.g., `APP_CONFIG={"theme":"dark","features":["chat","notifications"]}`)
+- `--config-env-file`: Specify a default configuration file for environment-specific settings
 
-You specify all the .env files that you want to use by separating the with comma.
+#### Encrypt Command
 
-```shell
+Encrypt sensitive environment files:
 
-env_builder --env-file=.env
-
+```bash
+env_builder encrypt --password=yourSecretKey .env
 ```
 
-Or
+#### Decrypt Command
 
-```shell
+Decrypt previously encrypted environment files:
 
-env_builder --env-file=.env.development, .env.production, .env.staging
-
+```bash
+env_builder decrypt --password=yourSecretKey .env.encrypted
 ```
 
-Or
+#### Version Command
 
-```shell
+Displays version information:
 
-env_builder --env-file=.env.development
-
+```bash
+env_builder version
+# or
+env_builder --version
 ```
 
-Wait till `env_builder` takes care of everything for you.
-Now, you can use your environment variables inside your application.
+**Aliases:**
+- `--version`, `-v`
 
-Ex:
+**Displays:**
+- CLI version (from pubspec.yaml)
+- Dart SDK version
+- Tool description
+- Homepage URL
+
+### Environment File Format
+
+Create `.env` files in your project root:
+
+```bash
+# .env.development
+BASE_URL=https://dev-api.example.com
+API_KEY=dev_key_123
+DEBUG=true
+
+# .env.production
+BASE_URL=https://api.example.com
+API_KEY=prod_key_456
+DEBUG=false
+```
+
+### Generated Code
+
+The tool generates type-safe Dart classes:
 
 ```dart
-/// In development mode, use AppFlavor.development(); => stands for .env.development
-/// In production mode, use AppFlavor.production(); => stands for .env.production or .env in case you provide only that one
-/// In staging mode, use AppFlavor.staging(); => stands for .env.staging
+// env.development.dart
+import 'package:envied/envied.dart';
 
+part 'env.development.g.dart';
+
+@Envied(path: '.env.development')
+abstract class EnvDevelopment {
+  @EnviedField(varName: 'BASE_URL')
+  static const String baseUrl = _EnvDevelopment.baseUrl;
+
+  @EnviedField(varName: 'API_KEY', obfuscate: true)
+  static final String apiKey = _EnvDevelopment.apiKey;
+
+  @EnviedField(varName: 'DEBUG')
+  static const bool debug = _EnvDevelopment.debug;
+}
+```
+
+### Flutter Integration
+
+In your Flutter app, use the generated environments:
+
+```dart
+import 'package:env/env.dart';
+
+// Access environment variables
 final appFlavor = AppFlavor.production();
 
 class ApiService {
     final appBaseUrl = appFlavor.getEnv(Env.baseUrl);
     final apikey = appFlavor.getEnv(Env.apiKey);
 }
+```
+
+### Project Structure
+
+After running the build command, your project structure will look like:
 
 ```
-- In development mode, use `AppFlavor.development()`. It stands for .env.development
-- In production mode, use `AppFlavor.production()`. It stands for .env.production or .env in case you provide only that one.
-- In staging mode, use `AppFlavor.staging()`. It stands for .env.staging
+your-flutter-project/
+├── packages/
+│   └── env/
+│       ├── .env.development
+│       ├── .env.production
+│       ├── env.development.dart
+│       ├── env.production.dart
+│       ├── env.dart (barrel export)
+│       ├── env.g.dart (enum definitions)
+│       └── pubspec.yaml
+├── .env.development
+├── .env.production
+├── pubspec.yaml (updated with env dependency)
+└── lib/
+    └── main.dart
+```
 
-NB: you can name you .env.* file whatever you want. But, to call the appropriate AppFlavor, use the word after .env.
+### Security Best Practices
 
-Ex:
+1. **Never commit .env files** - Add them to `.gitignore`
+2. **Use encryption** for sensitive production variables
+3. **Store secrets securely** in your CI/CD platform
+4. **Use different keys** for different environments
+5. **Rotate secrets** regularly
 
-`.env.word` ==> `AppFlavor.word()`
+## Examples
 
-## Environment File Encryption / Decryption
+Check the [`example/`](https://github.com/KalybosPro/env_builder_cli/tree/main/example) directory for a complete working example.
 
-This CLI provides a simple and secure way to encrypt and decrypt your environment files (.env).
-It helps protect sensitive information such as API keys, database credentials, and tokens when sharing code or committing to a repository.
-
-## Features
-
-- AES-based encryption with a password-derived key.
-- CLI commands for quick usage (encrypt / decrypt).
-- Compatible with .env files of any size.
-
-## Usage
-
-1. Encrypt a file
+To run the example:
 
 ```bash
-
-env_builder encrypt .env .env.enc --password superSecretKey
+cd example
+flutter pub get
+# The .env file already exists
+env_builder build --env-file=.env
+flutter run
 ```
 
-- `.env` → input file (plaintext environment file).
-- `.env.enc` → output file (encrypted file).
-- `--password` → secret used to derive the encryption key.
+## Contributing
 
-Result:
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
-- A `.env.enc` file is created.
-- Can be stored safely in your repo.
+## License
 
-2. Decrypt a file
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-```bash
+---
 
-env_builder decrypt .env.enc .env --password superSecretKey
-```
-
-- `.env.enc` → input file (encrypted file).
-- `.env` → output file (restored plaintext file).
-- `--password` → must be the same password used during encryption.
-
-Result:
-
-- The original `.env` file is restored.
-
-## Notes
-
-- If the password does not match or the file is corrupted, you’ll get:
-```javascript
-
-Error: Invalid password or corrupted file.
-```
-- For production use, always use a strong and private password.
-- Do not commit decrypted `.env` files to version control. Only commit the encrypted version (`.env.enc`).
-
-## Example Workflow
-
-```bash
-
-# Encrypt your .env before committing
-env_builder encrypt .env .env.enc --password superSecretKey12345
-
-# Remove the plaintext file (optional)
-rm .env
-
-# Later, restore it locally
-env_builder decrypt .env.enc .env --password superSecretKey12345
-```
-
-With this, your team can safely share the .env.enc file while keeping secrets protected.
+Made with ❤️ for the Flutter community

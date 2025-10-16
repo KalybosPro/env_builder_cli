@@ -23,7 +23,7 @@ class BuildCommand extends Command<int> {
   String get name => 'build';
 
   BuildCommand() {
-    argParser.addOption('env-file', abbr: 'e', help: 'Environment file(s)');
+    argParser.addOption('env-file', abbr: 'e', help: 'Environment file(s) - if not specified, all .env* files will be used');
   }
 
 
@@ -31,24 +31,29 @@ class BuildCommand extends Command<int> {
   Future<int> run() async {
     try {
       final envFileArg = argResults!['env-file'] as String?;
+      List<String> envFilePaths;
 
       if (envFileArg == null || envFileArg.isEmpty) {
-        throw ArgumentError('--env-file is required');
+        // Scan for .env* files if no specific file provided
+        envFilePaths = _findEnvFilesInDirectory(Directory.current);
+        if (envFilePaths.isEmpty) {
+          throw ArgumentError('No .env* files found in current directory and --env-file not specified');
+        }
+      } else {
+        // Extract environment file paths from argument
+        envFilePaths = envFileArg
+            .split(',')
+            .where((path) => path.trim().isNotEmpty)
+            .map((path) => path.trim())
+            .toList();
+
+        if (envFilePaths.isEmpty) {
+          throw ArgumentError('No environment files specified');
+        }
+
+        // Validate environment files exist
+        FileValidator.validateEnvFiles(envFilePaths);
       }
-
-      // Extract environment file paths
-      final envFilePaths = envFileArg
-          .split(',')
-          .where((path) => path.trim().isNotEmpty)
-          .map((path) => path.trim())
-          .toList();
-
-      if (envFilePaths.isEmpty) {
-        throw ArgumentError('No environment files specified');
-      }
-
-      // Validate environment files exist
-      FileValidator.validateEnvFiles(envFilePaths);
 
       final envBuilder = env_builder_cli.EnvBuilderCli();
       final dartFileGenerator = DartFileGenerator(envBuilder);
@@ -171,6 +176,25 @@ class BuildCommand extends Command<int> {
         print(TextTemplates.errorInputRead.replaceAll('{message}', e.toString()));
       }
     }
+  }
+
+  /// Finds all .env* files in the given directory
+  List<String> _findEnvFilesInDirectory(Directory directory) {
+    final envFiles = <String>[];
+    final entities = directory.listSync(recursive: false);
+
+    for (final entity in entities) {
+      if (entity is File) {
+        final fileName = p.basename(entity.path);
+        if (fileName.startsWith('.env')) {
+          envFiles.add(entity.path);
+        }
+      }
+    }
+
+    // Sort the files to have consistent ordering
+    envFiles.sort();
+    return envFiles;
   }
 
 }
