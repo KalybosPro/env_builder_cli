@@ -6,7 +6,7 @@ import '../../core/env_crypto.dart';
 /// Command for decrypting .env files
 class DecryptCommand extends Command<int> {
   @override
-  String get description => 'Decrypt .env files';
+  String get description => 'Decrypt .env.encrypted files';
 
   @override
   String get name => 'decrypt';
