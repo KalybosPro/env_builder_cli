@@ -17,13 +17,7 @@ Thank you for your interest in contributing to Env Builder CLI! This document pr
 
 ## Code of Conduct
 
-This project follows a code of conduct to ensure a welcoming environment for all contributors. By participating, you agree to:
-
-- Be respectful and inclusive
-- Focus on constructive feedback
-- Accept responsibility for mistakes
-- Show empathy towards other contributors
-- Help create a positive community
+This project has adopted a Code of Conduct to ensure a welcoming and inclusive environment for all contributors. By participating in this project, you agree to abide by its terms. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details.
 
 ## Getting Started
 
