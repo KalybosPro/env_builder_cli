@@ -23,3 +23,9 @@
 - Refactored code structure for improved maintainability
 - Updated example package structure
 - Modified the env package generation's command
+
+## 1.1.3
+
+- `--output-dir`: Custom output directory (default: `env`)
+- `--no-encrypt`: Skip encryption of sensitive variables
+- `--verbose`: Detailed output during build process

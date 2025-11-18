@@ -2,6 +2,7 @@
 
 import '../core/core.dart';
 import 'package:path/path.dart' as p;
+import 'commands/build_command.dart';
 
 /// Handles file copying operations
 ///
@@ -40,7 +41,9 @@ class FileCopier {
     try {
       await envFile.copy(destinationFile.path);
       _envFiles[index] = destinationFile.path;
-      print('Copied $fileName file to ${destinationFile.path}');
+      if (BuildCommand.isVerbose) {
+        print('Copied $fileName file to ${destinationFile.path}');
+      }
     } catch (e) {
       throw FileSystemException(
         'Error copying $envFilePath to ${destinationFile.path}: $e',

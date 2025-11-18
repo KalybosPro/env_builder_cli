@@ -39,10 +39,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // Just to simulate the use of EnvValue
   void createUser(EnvValue env) {
-    final url = env(Env.createUserUrl);
+    // final url = env(Env.createUserUrl);
     final baseUrl = env(Env.baseUrl);
 
-    print('Response: $baseUrl$url');
+    print('Response: $baseUrl');
   }
 
   @override

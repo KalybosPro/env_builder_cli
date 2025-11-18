@@ -91,7 +91,7 @@ ${keepExample ? '!.env.example' : ''}
   /// Writes environment test file
   static void writeEnvTestFile(String path) {
     final testDir = Directory(p.join(path, 'test'));
-    final testFile = File(p.join(testDir.path, 'env_test.dart'));
+    final testFile = File(p.join(testDir.path, '${TextTemplates.packageName}_test.dart'));
 
     try {
       if (!testDir.existsSync()) {

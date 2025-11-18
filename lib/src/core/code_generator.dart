@@ -141,7 +141,7 @@ factory AppFlavor.$flavor() => const AppFlavor._(flavor: Flavor.$flavor);
         .join('\n');
 
     return '''
-import 'package:env/env.dart';
+import 'package:${TextTemplates.packageName}/${TextTemplates.packageName}.dart';
 
 enum Flavor { $flavors }
 

@@ -26,12 +26,6 @@ Install the CLI globally using pub:
 dart pub global activate env_builder_cli
 ```
 
-Or using the executable name:
-
-```bash
-dart pub global activate env_builder
-```
-
 ### Local Installation
 
 Add to your `pubspec.yaml`:
@@ -73,17 +67,20 @@ Generates environment packages from `.env` files:
 env_builder build
 
 # Build with specific environment files
-env_builder build --env-file=.env.dev,.env.prod
+env_builder build --env-file=.env.development,.env.production,.env.staging
 
-# Build with custom output directory
+# Build with custom output directory (default: env)
 env_builder build --output-dir=custom_env
+
+# Skip encryption of sensitive variables
+env_builder build --no-encrypt
+
+# Show detailed output during build process
+env_builder build --verbose
 
 ```
 
 **Planned Features:**
-- `--output-dir`: Custom output directory (default: `packages/env`)
-- `--no-encrypt`: Skip encryption of sensitive variables
-- `--verbose`: Detailed output during build process
 - **Complex Data Types Support**: Handle JSON-like strings (e.g., `APP_CONFIG={"theme":"dark","features":["chat","notifications"]}`)
 - `--config-env-file`: Specify a default configuration file for environment-specific settings
 
@@ -217,7 +214,7 @@ To run the example:
 cd example
 flutter pub get
 # The .env file already exists
-env_builder build --env-file=.env
+env_builder build
 flutter run
 ```
 

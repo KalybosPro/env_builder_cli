@@ -35,9 +35,11 @@ class YamlManager {
       _updateYamlField(editor, doc, 'version', EnvConfig.defaultVersion);
 
       pubspecFile.writeAsStringSync(editor.toString());
-    print(TextTemplates.pubspecUpdated);
+      print(TextTemplates.pubspecUpdated);
     } catch (e) {
-      print(TextTemplates.pubspecUpdateFailed.replaceAll('{error}', e.toString()));
+      print(
+        TextTemplates.pubspecUpdateFailed.replaceAll('{error}', e.toString()),
+      );
     }
 
     await _addDependencies(pubspecFile, path);
@@ -62,23 +64,9 @@ class YamlManager {
   }
 
   static Future<void> _addDependencies(File pubspecFile, String path) async {
-    // await ProcessRunner.runDartCommand(['pub', 'add', 'envied'], path);
-    // await ProcessRunner.runDartCommand([
-    //   'pub',
-    //   'add',
-    //   'envied_generator',
-    //   '--dev',
-    // ], path);
-    // await ProcessRunner.runDartCommand([
-    //   'pub',
-    //   'add',
-    //   'build_runner',
-    //   '--dev',
-    // ], path);
-
     final content =
         '''
-name: env
+name: ${TextTemplates.packageName}
 description: ${EnvConfig.defaultDescription}
 version: ${EnvConfig.defaultVersion}
 publish_to: none
@@ -88,12 +76,20 @@ environment:
   flutter: "${EnvConfig.defaultFlutterVersion}"
 
 dependencies:
-  envied: ^1.2.1
+  envied: ^1.3.1
 
 dev_dependencies:
-  envied_generator: ^1.2.1
-  build_runner: ^2.8.0
+  build_runner: ^2.10.3
+  envied_generator: ^1.3.1
+  flutter_test:
+    sdk: flutter
 
+
+  flutter_lints: ^5.0.0
+
+
+flutter:
+  uses-material-design: true
 ''';
     pubspecFile.writeAsStringSync(content);
 
@@ -104,7 +100,9 @@ dev_dependencies:
   static void updateRootPubspecWithEnvPackage(String rootPubspecPath) {
     final file = File(rootPubspecPath);
     if (!file.existsSync()) {
-      print(TextTemplates.pubspecRootNotFound.replaceAll('{path}', rootPubspecPath));
+      print(
+        TextTemplates.pubspecRootNotFound.replaceAll('{path}', rootPubspecPath),
+      );
       exit(1);
     }
 
@@ -118,7 +116,9 @@ dev_dependencies:
       editor.update(
         ['dependencies'],
         {
-          'env': {'path': 'packages/env'},
+          TextTemplates.packageName: {
+            'path': 'packages/${TextTemplates.packageName}',
+          },
         },
       );
       file.writeAsStringSync(editor.toString());
@@ -126,8 +126,11 @@ dev_dependencies:
       return;
     }
 
-    if (!dependencies.containsKey('env')) {
-      editor.update(['dependencies', 'env'], {'path': 'packages/env'});
+    if (!dependencies.containsKey(TextTemplates.packageName)) {
+      editor.update(
+        ['dependencies', TextTemplates.packageName],
+        {'path': 'packages/${TextTemplates.packageName}'},
+      );
       file.writeAsStringSync(editor.toString());
       print(TextTemplates.pubspecDependencyUpdated);
     } else {

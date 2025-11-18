@@ -36,14 +36,15 @@ class DirectoryManager {
 
   /// Gets or creates the env package directory
   static Future<Directory> getEnvPackageDirectory(
-    Directory packagesDir,
+    String currentDir,
+    String outputDirPath,
     env_builder_cli.EnvBuilder envBuilder,
   ) async {
-    final envPackagePath = p.join(packagesDir.path, CliConfig.envPackageName);
+    final envPackagePath = p.join(currentDir, outputDirPath);
     final envPackageDir = Directory(envPackagePath);
 
     if (!envPackageDir.existsSync()) {
-      await _createEnvPackage(packagesDir, envBuilder);
+      await _createEnvPackageForPath(envPackagePath, outputDirPath, envBuilder);
     } else {
       print('Env package already exists at ${envPackageDir.path}');
     }
@@ -51,25 +52,36 @@ class DirectoryManager {
     return envPackageDir;
   }
 
-  static Future<void> _createEnvPackage(
-    Directory packagesDir,
+  static Future<void> _createEnvPackageForPath(
+    String envPackagePath,
+    String outputDirPath,
     env_builder_cli.EnvBuilder envBuilder,
   ) async {
     print('Creating env Flutter package...');
+
+    // Get parent directory and package name
+    final parentDir = p.dirname(envPackagePath);
+    final packageName = p.basename(envPackagePath);
+
+    // Ensure parent directory exists
+    ensureDirectoryExists(parentDir, description: 'output directory');
+
     final createResult = await envBuilder.flutterCommand([
       'create',
       '--template=package',
-      CliConfig.envPackageName,
-    ], path: packagesDir.path);
+      packageName,
+    ], path: parentDir);
 
     if (createResult.exitCode != 0) {
       stderr.write(createResult.stderr);
       throw ProcessException(
         'flutter',
-        ['create', '--template=package', CliConfig.envPackageName],
+        ['create', '--template=package', packageName],
         'Failed to create Flutter package',
         createResult.exitCode,
       );
     }
   }
+
+
 }

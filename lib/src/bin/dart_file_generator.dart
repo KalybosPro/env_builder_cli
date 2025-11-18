@@ -2,6 +2,7 @@
 
 import '../core/core.dart';
 import 'cli_config.dart';
+import 'commands/build_command.dart';
 import 'directory_manager.dart';
 import 'package:path/path.dart' as p;
 import 'package:env_builder_cli/env_builder_cli.dart' as env_builder_cli;
@@ -47,7 +48,9 @@ class DartFileGenerator {
 
     try {
       envDartFile.writeAsStringSync(envContent);
-      print('Generated $envDartFilePath');
+      if (BuildCommand.isVerbose) {
+        print('Generated $envDartFilePath');
+      }
     } catch (e) {
       throw FileSystemException(
         'Error writing Dart env file $envDartFilePath: $e',
@@ -65,7 +68,9 @@ class DartFileGenerator {
 
     try {
       enumsFile.writeAsStringSync(enumContent);
-      print('Generated $enumsFilePath');
+      if (BuildCommand.isVerbose) {
+        print('Generated $enumsFilePath');
+      }
     } catch (e) {
       throw FileSystemException('Error writing enums.dart file: $e');
     }
@@ -76,17 +81,24 @@ class DartFileGenerator {
     List<String> envFilePaths,
     Directory envPackageDir,
   ) {
+    TextTemplates.packageName = p.basename(envPackageDir.path);
+
     final libDir = Directory(
       p.join(envPackageDir.path, CliConfig.libFolderName),
     );
-    final envExportFilePath = p.join(libDir.path, 'env.dart');
+    final envExportFilePath = p.join(
+      libDir.path,
+      '${TextTemplates.packageName}.dart',
+    );
     final envExportFile = File(envExportFilePath);
 
     final exports = _buildExportContent(envFilePaths);
 
     try {
       envExportFile.writeAsStringSync(exports);
-      print('Generated ${envExportFile.path}');
+      if (BuildCommand.isVerbose) {
+        print('Generated ${envExportFile.path}');
+      }
     } catch (e) {
       throw FileSystemException('Error writing env.dart export file: $e');
     }
@@ -122,7 +134,9 @@ $envExports
     try {
       DirectoryManager.ensureDirectoryExists(configDir.path);
       appFlavorFile.writeAsStringSync(appFlavorContent);
-      print('Generated ${appFlavorFile.path}');
+      if (BuildCommand.isVerbose) {
+        print('Generated ${appFlavorFile.path}');
+      }
     } catch (e) {
       throw FileSystemException('Error writing app_flavor.dart file: $e');
     }
