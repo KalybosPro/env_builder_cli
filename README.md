@@ -32,7 +32,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  env_builder_cli: ^1.1.4
+  env_builder_cli: ^1.1.5
 ```
 
 ## Usage
@@ -63,20 +63,18 @@ This will:
 Generates environment packages from `.env` files:
 
 ```bash
-# Build with default configuration (auto-detects .env* files)
-env_builder build
 
 # Build with specific environment files
 env_builder build --env-file=.env.development,.env.production,.env.staging
 
 # Build with custom output directory (default: env)
-env_builder build --output-dir=custom_env
+env_builder build --output-dir=custom_env --env-file=.env
 
 # Skip encryption of sensitive variables
-env_builder build --no-encrypt
+env_builder build --no-encrypt --env-file=.env
 
 # Show detailed output during build process
-env_builder build --verbose
+env_builder build --verbose --env-file=.env
 
 ```
 

@@ -11,8 +11,6 @@ import '../file_validator.dart';
 import '../package_configurator.dart';
 import 'package:path/path.dart' as p;
 
-import 'commands.dart' show AabBuildCommand, ApkBuildCommand;
-
 // ignore_for_file: avoid_print
 
 /// Command for building env packages from .env files
@@ -50,10 +48,6 @@ class BuildCommand extends Command<int> {
       abbr: 'v',
       help: 'Show detailed output during build process',
     );
-
-    // Add subcommands for APK and AAB building
-    addSubcommand(ApkBuildCommand());
-    addSubcommand(AabBuildCommand());
   }
 
   @override

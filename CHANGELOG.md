@@ -34,3 +34,7 @@
 
 - Added APK build command (`env_builder apk`) for building Flutter APKs with release obfuscation
 - Added AAB build command (`env_builder aab`) for building Flutter AABs with release obfuscation
+
+## 1.1.5
+
+- Refactored command structure: made `apk` and `aab` commands top-level instead of subcommands of `build`

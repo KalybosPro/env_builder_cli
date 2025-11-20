@@ -13,6 +13,8 @@ import 'package:env_builder_cli/src/bin/commands/commands.dart';
 Future<void> main(List<String> args) async {
   final commandRunner = CommandRunner<int>('env_builder', 'Automate Flutter env package creation')
     ..addCommand(BuildCommand())
+    ..addCommand(ApkBuildCommand())
+    ..addCommand(AabBuildCommand())
     ..addCommand(EncryptCommand())
     ..addCommand(DecryptCommand())
     ..addCommand(VersionCommand());

@@ -118,7 +118,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  env_builder_cli: ^1.1.4
+  env_builder_cli: ^1.1.5
 ```
 
 ### Verification
@@ -152,7 +152,7 @@ DEBUG=false
 ### 2. Run Build Command
 
 ```bash
-env_builder build
+env_builder build --env-file=.env.development,.env.production,.env.staging
 ```
 
 This creates:
@@ -192,8 +192,6 @@ env_builder build [options]
 
 **Examples:**
 ```bash
-# Build with all .env* files
-env_builder build
 
 # Build specific files
 env_builder build --env-file=.env.dev,.env.prod
