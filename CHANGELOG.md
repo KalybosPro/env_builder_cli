@@ -29,3 +29,8 @@
 - `--output-dir`: Custom output directory (default: `env`)
 - `--no-encrypt`: Skip encryption of sensitive variables
 - `--verbose`: Detailed output during build process
+
+## 1.1.4
+
+- Added APK build command (`env_builder apk`) for building Flutter APKs with release obfuscation
+- Added AAB build command (`env_builder aab`) for building Flutter AABs with release obfuscation

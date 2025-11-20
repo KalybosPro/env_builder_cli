@@ -118,7 +118,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  env_builder_cli: ^1.1.2
+  env_builder_cli: ^1.1.4
 ```
 
 ### Verification
@@ -241,6 +241,61 @@ env_builder decrypt --password=<key> <file>
 ```bash
 env_builder decrypt --password=mySecretKey .env.production.encrypted
 ```
+
+### APK Build Command
+
+Build Flutter APK with release obfuscation and debug symbol generation.
+
+**Usage:**
+```bash
+env_builder apk [options]
+```
+
+**Options:**
+- `--target, -t`: Target main Dart file path (default: `lib/main.dart`)
+
+**Examples:**
+```bash
+# Build APK with default settings
+env_builder apk
+
+# Build APK with custom target
+env_builder apk --target=lib/main_production.dart
+```
+
+**What it does:**
+1. Executes `flutter build apk` with release configuration
+2. Applies obfuscation to protect code
+3. Generates debug symbols for crash analysis
+4. Stores symbols in `build/app/outputs/symbols/`
+
+### AAB Build Command
+
+Build Flutter AAB (Android App Bundle) with release obfuscation and debug symbol generation.
+
+**Usage:**
+```bash
+env_builder aab [options]
+```
+
+**Options:**
+- `--target, -t`: Target main Dart file path (default: `lib/main.dart`)
+
+**Examples:**
+```bash
+# Build AAB with default settings
+env_builder aab
+
+# Build AAB with custom target
+env_builder aab --target=lib/main_production.dart
+```
+
+**What it does:**
+1. Executes `flutter build appbundle` with release configuration
+2. Applies obfuscation to protect code
+3. Generates debug symbols for crash analysis
+4. Stores symbols in `build/app/outputs/symbols/`
+5. Creates optimized AAB for Google Play distribution
 
 ### Version Command
 

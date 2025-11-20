@@ -32,7 +32,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  env_builder_cli: ^1.1.2
+  env_builder_cli: ^1.1.4
 ```
 
 ## Usage
@@ -98,6 +98,28 @@ Decrypt previously encrypted environment files:
 
 ```bash
 env_builder decrypt --password=yourSecretKey .env.encrypted
+```
+
+#### APK Build Command
+
+Build Flutter APK with release obfuscation:
+
+```bash
+env_builder apk
+
+# Build with custom target
+env_builder apk --target=lib/main_development.dart
+```
+
+#### AAB Build Command
+
+Build Flutter AAB (Android App Bundle) with release obfuscation:
+
+```bash
+env_builder aab
+
+# Build with custom target
+env_builder aab --target=lib/main_production.dart
 ```
 
 #### Version Command
