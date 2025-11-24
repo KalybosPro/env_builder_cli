@@ -46,8 +46,8 @@ class ProcessRunner {
     );
 
     // Stream stdout and stderr to terminal in real-time for progress indicators
-    process.stdout.listen(stdout.add);
-    process.stderr.listen(stderr.add);
+    stdout.addStream(process.stdout);
+    stderr.addStream(process.stderr);
 
     return process;
   }
