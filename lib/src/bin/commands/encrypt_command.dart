@@ -20,7 +20,7 @@ class EncryptCommand extends Command<int> {
     try {
       final password = argResults!['password'] as String;
       final input = argResults!.rest.isNotEmpty ? argResults!.rest[0] : '.env';
-      final output = argResults!.rest.length > 1 ? argResults!.rest[1] : '${input}.encrypted';
+      final output = argResults!.rest.length > 1 ? argResults!.rest[1] : '$input.encrypted';
 
       await EnvCrypto.encryptFile(input, output, password);
       print('Encryption completed successfully');

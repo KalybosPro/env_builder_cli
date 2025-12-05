@@ -10,11 +10,17 @@ environment:
 # Add regular dependencies here.
 dependencies:
   args: ^2.7.0
+  analyzer: ^6.4.1
+  build: ^2.4.1
+  build_runner: ^2.4.8
   cli_util: ^0.4.0
   crypto: ^3.0.6
   encrypt: ^5.0.3
+  image: ^4.1.7
   path: ^1.8.3
+  source_gen: ^1.5.0
   universal_io: ^2.2.2
+  xml: ^6.5.0
   yaml: ^3.1.1
   yaml_edit: ^2.2.2
 

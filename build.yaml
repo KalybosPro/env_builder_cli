@@ -1,0 +1,28 @@
+builders:
+  asset_generator:
+    import: "package:env_builder_cli/src/builders/asset_builder.dart"
+    builder_factories: ["assetBuilder"]
+    build_extensions: {".dart": [".assets.g.dart", ".assets.widgets.g.dart", ".assets.gen.dart"]}
+    auto_apply: root_package
+    build_to: source
+    required_inputs: ["assets/"]
+
+  asset_encryptor:
+    import: "package:env_builder_cli/src/builders/asset_encryptor_builder.dart"
+    builder_factories: ["assetEncryptorBuilder"]
+    build_extensions: {".dart": [".assets.encrypted.dart"]}
+    auto_apply: dependents
+    build_to: source
+
+targets:
+  $default:
+    builders:
+      env_builder_cli|asset_generator:
+        enabled: true
+        options:
+          encrypt: "xor"  # Options: "xor" or "aes"
+          compress: true
+          svg_minify: true
+          chunk_size: 1024  # KB
+      env_builder_cli|asset_encryptor:
+        enabled: false

@@ -11,3 +11,4 @@ export 'package:yaml/yaml.dart';
 export 'package:yaml_edit/yaml_edit.dart';
 export 'package:env_builder_cli/src/env_builder.dart';
 export 'env_crypto.dart';
+export 'asset/asset.dart';

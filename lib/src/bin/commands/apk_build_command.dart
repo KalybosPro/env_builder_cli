@@ -1,7 +1,7 @@
 import 'package:args/command_runner.dart';
 import 'package:env_builder_cli/src/core/core.dart';
 
-/// Subcommand for building Flutter APK
+/// Command for building Flutter APK
 class ApkBuildCommand extends Command<int> {
   @override
   String get name => 'apk';

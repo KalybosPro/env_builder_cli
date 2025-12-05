@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Dart SDK Version](https://img.shields.io/badge/Dart-3.8.1+-blue.svg)](https://dart.dev/)
 
-A powerful Dart CLI tool that automates the creation and maintenance of environment packages for Flutter applications. Generate type-safe environment variable access from `.env` files with built-in encryption support.
+A powerful Dart CLI tool that automates the creation and maintenance of environment packages for Flutter applications. Generate type-safe environment variable access from `.env` files with built-in encryption support, and encrypt/embed assets directly in your Dart code.
 
 ## Features
 
@@ -15,6 +15,9 @@ A powerful Dart CLI tool that automates the creation and maintenance of environm
 - 🔄 **Multi-Environment Support**: Handle development, staging, production, and custom environments
 - 📂 **Git Integration**: Automatic `.gitignore` updates with appropriate environment file rules
 - 🧪 **Testing Support**: Generates test files for environment variable validation
+- 🎨 **Asset Encryption**: Encrypt and embed images, videos, and SVGs directly in Dart code
+- 🔒 **Obfuscated Assets**: XOR/AES encryption with automatic key generation
+- 📦 **Zero Runtime Dependencies**: Assets are embedded as constants, no pubspec.yaml changes needed
 
 ## Installation
 
@@ -120,6 +123,37 @@ env_builder aab
 env_builder aab --target=lib/main_production.dart
 ```
 
+#### Assets Command
+
+Encrypt and embed assets directly in your Dart code:
+
+```bash
+# Generate encrypted assets with XOR encryption (default)
+env_builder assets
+
+# Use AES encryption instead
+env_builder assets --encrypt=aes
+
+# Disable image compression and SVG minification
+env_builder assets --no-compress
+
+# Show detailed output during generation
+env_builder assets --verbose
+```
+
+**Features:**
+- **Automatic Asset Discovery**: Scans `assets/` directory for images, videos, and SVGs
+- **Encryption Options**: XOR (fast, lightweight) or AES (secure, slower)
+- **Compression**: Automatic image compression and SVG minification
+- **Type Safety**: Generated code with proper typing for each asset type
+- **Widget Helpers**: Pre-built widgets for images, SVGs, and video controllers
+- **Flutter_gen Compatible**: Similar API to flutter_gen for easy migration
+
+**Supported Asset Types:**
+- **Images**: PNG, JPG, JPEG, GIF, WebP
+- **Videos**: MP4, WebM, MOV, AVI, MKV
+- **SVGs**: SVG files with automatic minification
+
 #### Version Command
 
 Displays version information:
@@ -194,6 +228,51 @@ class ApiService {
 }
 ```
 
+### Asset Integration
+
+After running `env_builder assets`, use the encrypted assets in your Flutter app:
+
+```dart
+import 'package:my_app/src/generated/assets.gen.dart';
+
+// Access encrypted assets
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Use encrypted image
+        Assets.images.logoImage(),
+
+        // Use encrypted SVG
+        Assets.svgs.iconSvg(),
+
+        // Use encrypted video
+        VideoPlayer(Assets.videos.introController()),
+      ],
+    );
+  }
+}
+```
+
+**Generated Asset APIs:**
+
+```dart
+// assets.g.dart - Raw encrypted data access
+final logoBytes = Assets.logo; // Uint8List
+final iconSvg = Assets.icon; // String
+
+// assets.widgets.g.dart - Pre-built widgets
+final logoImage = Assets.logoImage(); // Image widget
+final iconSvg = Assets.iconSvg(); // SvgPicture widget
+final videoController = Assets.introController(); // VideoPlayerController
+
+// assets.gen.dart - Flutter_gen compatible API
+final logoImage = Assets.images.logo; // AssetImage
+final iconSvg = Assets.svgs.icon(); // SvgPicture Function
+final videoController = Assets.videos.intro(); // VideoPlayerController Function
+```
+
 ### Project Structure
 
 After running the build command, your project structure will look like:
@@ -209,11 +288,22 @@ your-flutter-project/
 │       ├── env.dart (barrel export)
 │       ├── env.g.dart (enum definitions)
 │       └── pubspec.yaml
+├── assets/
+│   ├── images/
+│   │   ├── logo.png
+│   │   └── icon.svg
+│   └── videos/
+│       └── intro.mp4
+├── lib/
+│   └── src/
+│       └── generated/
+│           ├── assets.g.dart (encrypted asset data)
+│           ├── assets.widgets.g.dart (widget helpers)
+│           └── assets.gen.dart (flutter_gen compatible API)
 ├── .env.development
 ├── .env.production
 ├── pubspec.yaml (updated with env dependency)
-└── lib/
-    └── main.dart
+└── build.yaml (asset generation configuration)
 ```
 
 ### Security Best Practices
