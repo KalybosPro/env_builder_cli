@@ -242,13 +242,15 @@ class MyWidget extends StatelessWidget {
     return Column(
       children: [
         // Use encrypted image
-        Assets.images.logoImage(),
+        Assets.images.logo.image(),
 
         // Use encrypted SVG
-        Assets.svgs.iconSvg(),
+        Assets.svgs.icon.svg(),
 
         // Use encrypted video
         VideoPlayer(Assets.videos.introController()),
+
+        Assets.videos.intro.videoPlayer(),
       ],
     );
   }

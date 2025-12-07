@@ -1,51 +1,57 @@
 # Release Notes - Env Builder CLI
 
-## v1.1.5 (Latest)
+## v1.1.6 (Latest)
 
-**Release Date:** 20/11/2025
+**Release Date:** 12/07/2025
 
-### Changes
-- **Command Structure Refactoring**: Reorganized the command structure to make `apk` and `aab` commands independent top-level commands instead of being subcommands of the `build` command.
-  - Before: `env_builder build apk`, `env_builder build aab`
-  - After: `env_builder apk`, `env_builder aab`
-- **Build Command Fix**: Fixed issue where running `env_builder build --env-file=.env` without a subcommand would result in "Missing subcommand" error. Now the build command can be used directly for generating env packages.
+### 🚀 New Features
+- **Assets Command**: New `env_builder assets` command for encrypting and embedding assets directly into Dart code
+  - **Asset Discovery**: Automatically scans `assets/` directory for supported files
+  - **Multi-format Support**: Images (PNG, JPG, JPEG, GIF, WebP), Videos (MP4, WebM, MOV, AVI, MKV), and SVGs
+  - **Compression & Optimization**: Automatic image compression and SVG minification (configurable)
+  - **Encryption Options**: XOR (fast, default) and AES (secure) encryption methods
+  - **Zero Runtime Dependencies**: Assets embedded as constants, no pubspec.yaml changes needed
 
-### New Usage
+### 🔧 Generated APIs
+- **Raw Access**: Direct access to encrypted asset data (Uint8List/String)
+- **Widget Helpers**: Pre-built widgets for images, SVGs, and video controllers
+- **Flutter_gen Compatible**: Drop-in replacement API with the same structure as flutter_gen
+
+### 📖 Usage Examples
 ```bash
-# Build env package
-env_builder build --env-file=.env
+# Encrypt and embed assets with XOR encryption (default)
+env_builder assets
 
-# Build APK
-env_builder apk
+# Use AES encryption for sensitive assets
+env_builder assets --encrypt=aes
 
-# Build AAB
-env_builder aab
+# Skip compression and minification
+env_builder assets --no-compress
+
+# Verbose output during generation
+env_builder assets --verbose
 ```
 
-### Previous Versions
+### 💻 Generated Code Usage
+```dart
+import 'package:app_assets/src/generated/assets.gen.dart';
 
-#### v1.1.4
-- Added APK build command (`env_builder apk`) for building Flutter APKs with release obfuscation
-- Added AAB build command (`env_builder aab`) for building Flutter AABs with release obfuscation
+// Access encrypted assets
+final logoBytes = Assets.logo; // Uint8List
+final videoPlayer = await Assets.videos.intro.video(); // VideoPlayer widget
+final svgPicture = Assets.svgs.icon.svg(); // SvgPicture widget
 
-#### v1.1.3
-- Added `--output-dir` option for custom output directories
-- Added `--no-encrypt` flag to skip sensitive variable encryption
-- Added `--verbose` flag for detailed build output
+// Flutter_gen compatible API
+final image = Assets.images.logo; // AssetGenImage
+```
 
-#### v1.1.2
-- Refactored code structure for improved maintainability
-- Updated example package structure
-- Modified env package generation process
+### 🔒 Security & Performance
+- **Encrypted Storage**: All assets are encrypted before embedding
+- **Type Safety**: Compile-time safe access prevents typos
+- **No Runtime Overhead**: Assets loaded from memory, no file I/O operations
+- **Build-time Only**: Encryption/decryption happens at build time only
 
-#### v1.1.1
-- Added user prompt for .env file encryption
-- Fixed bugs
-
-#### v1.1.0
-- Added environment file encryption/decryption with AES
-- Improved error handling for invalid/corrupted files
-- Updated README with usage examples
-
-#### v1.0.0
-- Initial release with basic env package generation functionality
+### 📋 Compatibility
+- **Dart SDK**: ^3.8.1+
+- **Flutter**: Compatible with existing projects
+- **Backward Compatible**: All existing features remain unchanged

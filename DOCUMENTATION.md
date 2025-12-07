@@ -352,14 +352,12 @@ env_builder assets --no-compress --verbose
 
 ```dart
 // assets.g.dart - Raw encrypted data access
-final logoBytes = Assets.logo; // Uint8List
+final logo = Assets.logo; // AssetGenImage
 final iconSvg = Assets.icon; // String
 final videoBytes = Assets.videoIntro; // Uint8List
 
 // assets.widgets.g.dart - Pre-built widgets
-final logoImage = Assets.logoImage(); // Image widget
-final iconSvg = Assets.iconSvg(); // SvgPicture widget
-final videoController = Assets.videoIntroController(); // Future<VideoPlayerController>
+final videoController = Assets.videoIntroController(); //Future<VideoPlayerController>
 
 // assets.gen.dart - Flutter_gen compatible API
 final logoImage = Assets.images.logo; // AssetGenImage
