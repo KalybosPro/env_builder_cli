@@ -1,6 +1,6 @@
 # Release Notes - Env Builder CLI
 
-## v1.1.6 (Latest)
+## v1.1.6+1 (Latest)
 
 **Release Date:** 12/07/2025
 
