@@ -265,47 +265,14 @@ final logoBytes = Assets.logo; // Uint8List
 final iconSvg = Assets.icon; // String
 
 // assets.widgets.g.dart - Pre-built widgets
-final logoImage = Assets.logoImage(); // Image widget
-final iconSvg = Assets.iconSvg(); // SvgPicture widget
-final videoController = Assets.introController(); // VideoPlayerController
+final logoImage = Assets.logo.image(); // Image widget
+final iconSvg = Assets.icon.svg(); // SvgPicture widget
+final videoController = Assets.videos.introController(); // VideoPlayerController
 
 // assets.gen.dart - Flutter_gen compatible API
 final logoImage = Assets.images.logo; // AssetImage
 final iconSvg = Assets.svgs.icon(); // SvgPicture Function
 final videoController = Assets.videos.intro(); // VideoPlayerController Function
-```
-
-### Project Structure
-
-After running the build command, your project structure will look like:
-
-```
-your-flutter-project/
-├── packages/
-│   └── env/
-│       ├── .env.development
-│       ├── .env.production
-│       ├── env.development.dart
-│       ├── env.production.dart
-│       ├── env.dart (barrel export)
-│       ├── env.g.dart (enum definitions)
-│       └── pubspec.yaml
-├── assets/
-│   ├── images/
-│   │   ├── logo.png
-│   │   └── icon.svg
-│   └── videos/
-│       └── intro.mp4
-├── lib/
-│   └── src/
-│       └── generated/
-│           ├── assets.g.dart (encrypted asset data)
-│           ├── assets.widgets.g.dart (widget helpers)
-│           └── assets.gen.dart (flutter_gen compatible API)
-├── .env.development
-├── .env.production
-├── pubspec.yaml (updated with env dependency)
-└── build.yaml (asset generation configuration)
 ```
 
 ### Security Best Practices
