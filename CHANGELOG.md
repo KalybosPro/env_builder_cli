@@ -38,3 +38,12 @@
 ## 1.1.5
 
 - Refactored command structure: made `apk` and `aab` commands top-level instead of subcommands of `build`
+
+## 1.1.6
+
+- Added assets command (`env_builder assets`) for encrypting and embedding assets directly in Dart code
+- Support for images (PNG, JPG, GIF, WebP), videos (MP4, WebM, MOV, AVI, MKV), and SVGs
+- Asset compression and SVG minification
+- Encryption options: XOR (fast, lightweight) or AES (secure)
+- Generated widget helpers for images, SVGs, and video controllers
+- Flutter_gen compatible API

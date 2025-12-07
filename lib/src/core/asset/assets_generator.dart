@@ -58,11 +58,11 @@ class AssetsGenerator {
         // Generate decrypted asset getter
         if (asset.type == asset_reader.AssetType.svg) {
           buffer.writeln(
-            'String get g${asset.variableName} => String.fromCharCodes(${_generateDecryptCall(asset.variableName, encryptionMethod)});',
+            'String get decrypted${asset.variableName} => String.fromCharCodes(${_generateDecryptCall(asset.variableName, encryptionMethod)});',
           );
         } else {
           buffer.writeln(
-            'Uint8List get g${asset.variableName} => Uint8List.fromList(${_generateDecryptCall(asset.variableName, encryptionMethod)});',
+            'Uint8List get decrypted${asset.variableName} => Uint8List.fromList(${_generateDecryptCall(asset.variableName, encryptionMethod)});',
           );
         }
 
@@ -97,11 +97,16 @@ class AssetsGenerator {
         processedBytes = normalizedSvgBytes;
       }
     } else if ((asset.type == asset_reader.AssetType.image) && compress) {
+      // Compress images if enabled
       processedBytes = asset_reader.AssetReader.compressImage(
         bytes,
         asset.extension,
       );
+    } else if (asset.type == asset_reader.AssetType.video) {
+      // Videos are kept as raw binary data (no compression available)
+      processedBytes = bytes;
     } else {
+      // Other binary assets (like unknown types) are kept as raw bytes
       processedBytes = bytes;
     }
 

@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Env Builder CLI',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
@@ -58,18 +59,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        leading: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(image: Assets.images.icon.provider),
+          ),
+        ),
+        actions: [
+          // 
+          Assets.images.icon.svg(width: 24, height: 24),
+          const SizedBox(width: 20),
+        ],
       ),
       body: Center(
-        child: Assets.images.homescreen.image(
-          height: size.height,
-          width: size.width,
-          fit: BoxFit.cover,
-        ),
+        child: Assets.images.homescreen.image(width: 200, height: 200),
       ),
     );
   }

@@ -7,6 +7,13 @@
 3. [Installation](#installation)
 4. [Quick Start](#quick-start)
 5. [Commands](#commands)
+    5.1. [Build Command](#build-command)
+    5.2. [Encrypt Command](#encrypt-command)
+    5.3. [Decrypt Command](#decrypt-command)
+    5.4. [APK Build Command](#apk-build-command)
+    5.5. [AAB Build Command](#aab-build-command)
+    5.6. [Assets Command](#assets-command)
+    5.7. [Version Command](#version-command)
 6. [Configuration](#configuration)
 7. [Generated Code Structure](#generated-code-structure)
 8. [API Reference](#api-reference)
@@ -295,6 +302,71 @@ env_builder aab --target=lib/main_production.dart
 4. Stores symbols in `build/app/outputs/symbols/`
 5. Creates optimized AAB for Google Play distribution
 
+### Assets Command
+
+Encrypts and embeds assets directly in your Dart code.
+
+**Usage:**
+```bash
+env_builder assets [options]
+```
+
+**Options:**
+- `--encrypt, -e`: Encryption method (`xor` or `aes`, default: `xor`)
+- `--no-compress`: Disable image compression and SVG minification
+- `--verbose`: Detailed output during generation
+
+**Examples:**
+```bash
+# Generate encrypted assets with XOR encryption (default)
+env_builder assets
+
+# Use AES encryption instead
+env_builder assets --encrypt=aes
+
+# Disable compression and show detailed output
+env_builder assets --no-compress --verbose
+```
+
+**What it does:**
+1. Scans the `assets/` directory for supported files
+2. Applies compression to images and minification to SVGs (unless disabled)
+3. Encrypts asset data using the specified method
+4. Generates Dart files with embedded encrypted assets:
+   - `lib/src/generated/assets.g.dart`: Raw encrypted data access
+   - `lib/src/generated/assets.widgets.g.dart`: Pre-built widgets
+   - `lib/src/generated/assets.gen.dart`: Flutter_gen compatible API
+5. Creates `build.yaml` with asset generation configuration
+6. Updates project structure for zero-runtime dependencies
+
+**Supported Asset Types:**
+- **Images**: PNG, JPG, JPEG, GIF, WebP
+- **Videos**: MP4, WebM, MOV, AVI, MKV
+- **SVGs**: SVG files with automatic minification
+
+**Encryption Options:**
+- **XOR**: Fast, lightweight encryption (recommended for most cases)
+- **AES**: Slower but more secure encryption (use for highly sensitive assets)
+
+**Generated Code Examples:**
+
+```dart
+// assets.g.dart - Raw encrypted data access
+final logoBytes = Assets.logo; // Uint8List
+final iconSvg = Assets.icon; // String
+final videoBytes = Assets.videoIntro; // Uint8List
+
+// assets.widgets.g.dart - Pre-built widgets
+final logoImage = Assets.logoImage(); // Image widget
+final iconSvg = Assets.iconSvg(); // SvgPicture widget
+final videoController = Assets.videoIntroController(); // Future<VideoPlayerController>
+
+// assets.gen.dart - Flutter_gen compatible API
+final logoImage = Assets.images.logo; // AssetGenImage
+final iconSvg = Assets.svgs.icon; // SvgGenImage
+final videoPlayer = Assets.videos.intro; // VideoGenImage
+```
+
 ### Version Command
 
 Displays version information.
@@ -363,6 +435,19 @@ your-flutter-project/
 │           └── env_test.dart
 ├── .env.development
 ├── .env.production
+├── assets/
+│   ├── images/
+│   │   ├── logo.png
+│   │   └── icon.svg
+│   └── videos/
+│       └── intro.mp4
+├── lib/
+│   └── src/
+│       └── generated/
+│           ├── assets.g.dart (encrypted asset data)
+│           ├── assets.widgets.g.dart (widget helpers)
+│           └── assets.gen.dart (flutter_gen compatible API)
+├── build.yaml (asset generation configuration)
 ├── pubspec.yaml (updated with env dependency)
 └── .gitignore (updated with env rules)
 ```
@@ -608,6 +693,64 @@ void main() {
       );
     });
   });
+}
+```
+
+### Using Encrypted Assets
+
+After running `env_builder assets`, you can use encrypted assets in your Flutter widgets:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:my_app/src/generated/assets.gen.dart';
+
+class MyHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Encrypted Assets Example'),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          // Using encrypted image with pre-built widget
+          Assets.images.logoImage(),
+
+          // Using encrypted SVG with custom styling
+          Assets.svgs.iconSvg(),
+
+          // Using encrypted video with FutureBuilder
+          FutureBuilder<VideoPlayer>(
+            future: Assets.videos.intro.video(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return SizedBox(height: 200, child: snapshot.data);
+              }
+              return CircularProgressIndicator();
+            },
+          ),
+
+          // Using raw encrypted data for custom processing
+          FutureBuilder<Uint8List>(
+            future: _decryptAsset(Assets.logo),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Image.memory(snapshot.data!);
+              }
+              return CircularProgressIndicator();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<Uint8List> _decryptAsset(Uint8List encryptedData) async {
+    // Custom decryption logic if needed
+    // Implementation depends on your encryption method
+    return encryptedData; // Placeholder
+  }
 }
 ```
 

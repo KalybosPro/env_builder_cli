@@ -45,6 +45,7 @@ class AssetsGenGenerator {
     buffer.writeln();
     buffer.writeln("import 'package:flutter/services.dart';");
     buffer.writeln("import 'package:flutter/widgets.dart';");
+    buffer.writeln("import 'package:video_player/video_player.dart' as _video;");
     buffer.writeln("import 'package:flutter_svg/flutter_svg.dart' as _svg;");
     buffer.writeln(
       "import 'package:flutter_svg_provider/flutter_svg_provider.dart' as p;",
@@ -109,6 +110,9 @@ class AssetsGenGenerator {
     // SvgGenImage class
     _generateSvgGenImage(buffer);
 
+    // VideoGenImage class
+    _generateVideoGenImage(buffer);
+
     return buffer.toString();
   }
 
@@ -160,9 +164,11 @@ class AssetsGenGenerator {
     final assetPath = 'assets/$relativePath';
 
     if (asset.type == asset_reader.AssetType.svg) {
-      return '  /// File path: $assetPath\n  SvgGenImage get ${asset.variableName} => SvgGenImage(g${asset.variableName});';
+      return '  /// File path: $assetPath\n  SvgGenImage get ${asset.variableName} => SvgGenImage(decrypted${asset.variableName});';
+    } else if (asset.type == asset_reader.AssetType.video) {
+      return '  /// File path: $assetPath\n  VideoGenImage get ${asset.variableName} => VideoGenImage(decrypted${asset.variableName});';
     } else {
-      return '  /// File path: $assetPath\n  AssetGenImage get ${asset.variableName} => AssetGenImage(g${asset.variableName});';
+      return '  /// File path: $assetPath\n  AssetGenImage get ${asset.variableName} => AssetGenImage(decrypted${asset.variableName});';
     }
   }
 
@@ -311,23 +317,71 @@ class AssetsGenGenerator {
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln();
-   
-    buffer.writeln('p.Svg provider({');
-    buffer.writeln('    Size? size,');
-    buffer.writeln('    double scale = 1.0,');
-    buffer.writeln('    Color? color,');
-    buffer.writeln('    p.SvgSource source = p.SvgSource.asset,');
+
+    buffer.writeln("p.Svg get provider => p.Svg('\${_assetName.hashCode}.svg',");
+    buffer.writeln('      source: p.SvgSource.asset,');
+    buffer.writeln('      svgGetter: (key) => Future.value(_assetName));');
+    buffer.writeln('}');
+  }
+
+  void _generateVideoGenImage(StringBuffer buffer) {
+    buffer.writeln('class VideoGenImage {');
     buffer.writeln(
-      '    Future<String?> Function(p.SvgImageKey)? svgGetter,',
+      '  const VideoGenImage(this._bytes, {this.size, this.flavors = const {}});',
     );
-    buffer.writeln('  }) {');
-    buffer.writeln('    return p.Svg(');
-    buffer.writeln('      _assetName,');
-    buffer.writeln('      size: size,');
-    buffer.writeln('      scale: scale,');
-    buffer.writeln('      color: color,');
-    buffer.writeln('      source: source,');
-    buffer.writeln('      svgGetter: svgGetter,');
+    buffer.writeln();
+    buffer.writeln('  final Uint8List _bytes;');
+    buffer.writeln('  final Size? size;');
+    buffer.writeln('  final Set<String> flavors;');
+    buffer.writeln();
+    buffer.writeln("  static const String package = 'app_assets';");
+    buffer.writeln();
+    buffer.writeln('  Future<_video.VideoPlayerController> controller({');
+    buffer.writeln('    _video.VideoPlayerOptions? videoPlayerOptions,');
+    buffer.writeln('    Future<_video.ClosedCaptionFile>? closedCaptionFile,');
+    buffer.writeln('    _video.VideoFormat? formatHint,');
+    buffer.writeln('  }) async {');
+    buffer.writeln('    final controller = _video.VideoPlayerController.memory(');
+    buffer.writeln('      _bytes,');
+    buffer.writeln('      videoPlayerOptions: videoPlayerOptions,');
+    buffer.writeln('      closedCaptionFile: closedCaptionFile,');
+    buffer.writeln('      formatHint: formatHint,');
+    buffer.writeln('    );');
+    buffer.writeln('    await controller.initialize();');
+    buffer.writeln('    return controller;');
+    buffer.writeln('  }');
+    buffer.writeln();
+    buffer.writeln('  Future<_video.VideoPlayer> video({');
+    buffer.writeln('    Key? key,');
+    buffer.writeln('    double? width,');
+    buffer.writeln('    double? height,');
+    buffer.writeln('    BoxFit? fit,');
+    buffer.writeln('    AlignmentGeometry alignment = Alignment.center,');
+    buffer.writeln('    Widget? placeholder,');
+    buffer.writeln('    Widget? errorBuilder,');
+    buffer.writeln('    bool autoInitialize = true,');
+    buffer.writeln('    double volume = 1.0,');
+    buffer.writeln('    bool looping = false,');
+    buffer.writeln('    bool showControls = false,');
+    buffer.writeln('    bool showControlsOnInitialize = true,');
+    buffer.writeln('    Duration? seek,');
+    buffer.writeln('  }) async {');
+    buffer.writeln('    final videoController = await controller();');
+    buffer.writeln('    return _video.VideoPlayer(');
+    buffer.writeln('      key: key,');
+    buffer.writeln('      width: width,');
+    buffer.writeln('      height: height,');
+    buffer.writeln('      controller: videoController,');
+    buffer.writeln('      fit: fit,');
+    buffer.writeln('      alignment: alignment,');
+    buffer.writeln('      placeholder: placeholder,');
+    buffer.writeln('      errorBuilder: errorBuilder,');
+    buffer.writeln('      autoInitialize: autoInitialize,');
+    buffer.writeln('      volume: volume,');
+    buffer.writeln('      looping: looping,');
+    buffer.writeln('      showControls: showControls,');
+    buffer.writeln('      showControlsOnInitialize: showControlsOnInitialize,');
+    buffer.writeln('      seek: seek,');
     buffer.writeln('    );');
     buffer.writeln('  }');
     buffer.writeln('}');

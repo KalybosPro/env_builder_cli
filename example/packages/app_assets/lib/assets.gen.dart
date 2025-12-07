@@ -160,20 +160,7 @@ class SvgGenImage {
     );
   }
 
-p.Svg provider({
-    Size? size,
-    double scale = 1.0,
-    Color? color,
-    p.SvgSource source = p.SvgSource.asset,
-    Future<String?> Function(p.SvgImageKey)? svgGetter,
-  }) {
-    return p.Svg(
-      _assetName,
-      size: size,
-      scale: scale,
-      color: color,
-      source: source,
-      svgGetter: svgGetter,
-    );
-  }
+p.Svg get provider => p.Svg('${_assetName.hashCode}.svg',
+      source: p.SvgSource.asset,
+      svgGetter: (key) => Future.value(_assetName));
 }
