@@ -47,3 +47,7 @@
 - Encryption options: XOR (fast, lightweight) or AES (secure)
 - Generated widget helpers for images, SVGs, and video controllers
 - Flutter_gen compatible API
+
+## 1.1.6+1
+
+- Some changes in README.md file
